@@ -1,0 +1,162 @@
+﻿@model IEnumerable<ShiftManagerProject.Models.FinalShift>
+
+@{
+    ViewBag.Title = "This Week's Shifts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 0;
+
+    DateTime nextSunday = DateTime.Now.AddDays(1);
+    while (nextSunday.DayOfWeek != DayOfWeek.Sunday)
+    { nextSunday = nextSunday.AddDays(1); }
+    var NextWeek = Convert.ToDateTime(nextSunday).ToString("dd/MM/yyyy");
+}
+<br /><br />
+<h2>Next Week's Shifts - @NextWeek</h2>
+<br /><br />
+<div class='table-responsive'>
+    <table id="tablePreview" class="table table-hover table-bordered" style="width:100%">
+        <tr class="table-active">
+            <th>
+            </th>
+            @foreach (var item in Model.Select(x => x.Day).Distinct())
+            {
+                <th>
+                    @Html.DisplayFor(x => item)
+                </th>
+            }
+        </tr>
+
+        @foreach (var items in Model.Take(1))
+        {
+            <tr>
+                <td class="table-info">
+                    @Html.DisplayNameFor(model => model.Morning)
+                </td>
+                @foreach (var Mshift in Model)
+                {
+
+                    if (Mshift.Morning.HasValue)
+                    {
+                        if (i++ % 2 == 0)
+                        {
+                            if (Mshift.Name.IsEmpty())
+                            {
+                                <td>
+                                    @Html.ActionLink("Update", "Edit", new { id = Mshift.ID }, new { @class = "badge badge-danger" })
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @Html.ActionLink(Mshift.Name, "Edit", new { id = Mshift.ID })
+                                </td>
+                            }
+                        }
+
+                    }
+                }
+            </tr>
+            i = 0;
+            <tr>
+                <td></td>
+                @foreach (var Mshift in Model)
+                {
+
+                    if (Mshift.Morning.HasValue)
+                    {
+                        if (i++ % 2 != 0)
+                        {
+                            if (Mshift.Name.IsEmpty())
+                            {
+                                <td>
+                                    @Html.ActionLink("Update", "Edit", new { id = Mshift.ID }, new { @class = "badge badge-danger" })
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @Html.ActionLink(Mshift.Name, "Edit", new { id = Mshift.ID })
+                                </td>
+                            }
+                        }
+
+                    }
+                }
+            </tr>
+        }
+        @foreach (var items in Model.Take(1))
+        {
+            <tr>
+                <td class="table-success">
+                    @Html.DisplayNameFor(model => model.Afternoon)
+                </td>
+
+                @foreach (var Ashift in Model)
+                {
+
+                    if (Ashift.Afternoon.HasValue)
+                    {
+                        if (Ashift.Name.IsEmpty())
+                        {
+                            <td>
+                                @Html.ActionLink("Update", "Edit", new { id = Ashift.ID }, new { @class = "badge badge-danger" })
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @Html.ActionLink(Ashift.Name, "Edit", new { id = Ashift.ID })
+                            </td>
+                        }
+                    }
+
+                }
+            </tr>
+        }
+
+        @foreach (var items in Model.Take(1))
+        {
+            <tr>
+                <td class="table-warning">
+                    @Html.DisplayNameFor(model => model.Night)
+                </td>
+                @foreach (var Nshift in Model)
+                {
+
+                    if (Nshift.Night.HasValue)
+                    {
+                        if (Nshift.Name.IsEmpty())
+                        {
+                            <td>
+                                @Html.ActionLink("Update", "Edit", new { id = Nshift.ID }, new { @class = "badge badge-danger" })
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @Html.ActionLink(Nshift.Name, "Edit", new { id = Nshift.ID })
+                            </td>
+                        }
+                    }
+                }
+            </tr>
+        }
+
+    </table>
+</div>
+
+<br /><br />
+@{
+    if (@ViewBag.admin != 0)
+    {
+        <h2>Offically Closed!</h2>
+    }
+    else
+    {
+        @Html.ActionLink("Save and Delete Preferences", "Send", "", new { @class = "btn btn-outline-danger" })
+    }
+}
+
+
+
+

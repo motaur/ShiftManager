@@ -1,0 +1,209 @@
+﻿@model ShiftManagerProject.Models.ShiftPref
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.EmployID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmployID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.NoOfShifts)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.NoOfShifts)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Morning1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Morning1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Afternoon1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Afternoon1)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Night1)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Night1)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Morning2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Morning2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Afternoon2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Afternoon2)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Night2)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Night2)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Morning3)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Morning3)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Afternoon3)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Afternoon3)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Night3)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Night3)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Morning4)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Morning4)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Afternoon4)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Afternoon4)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Night4)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Night4)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Morning5)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Morning5)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Afternoon5)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Afternoon5)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Night5)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Night5)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Morning6)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Morning6)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Afternoon6)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Afternoon6)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Night6)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Night6)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Morning7)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Morning7)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Afternoon7)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Afternoon7)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Night7)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Night7)
+        </dd>
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

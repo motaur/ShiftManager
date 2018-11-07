@@ -1,0 +1,166 @@
+﻿@model IEnumerable<ShiftManagerProject.Models.ShiftPref>
+
+@{
+    ViewBag.Title = "Your Preferences";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<br />
+<h2>Your Preferences</h2>
+<br />
+@{
+    List<string> DayOfWeek = new List<string>(new string[] { "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" });
+    List<string> Shifts = new List<string>(new string[] { "M", "A", "N" });
+    int i = 1;
+    int flag = 0;
+    long ID = 0;
+    string name = null;
+    foreach (var item in Model)
+    {
+        ID = item.ID;
+        name = item.Name;
+    }
+}
+
+<p>
+    @Html.ActionLink("Delete & Create New", "Delete", new { Id = ID })
+</p>
+
+<br />
+<div class='table-responsive'>
+    <table id="tablePreview" class="table table-hover table-bordered" style="width:100%">
+        <tr class="table-active">
+            <th>
+            </th>
+
+            @foreach (var day in DayOfWeek)
+            {
+                if (day != "")
+                {
+                    <th>
+                        @Html.DisplayFor(x => day)
+                    </th>
+                }
+            }
+        </tr>
+
+
+        @foreach (var items in Model.Take(1))
+        {
+            <tr>
+                <td class="table-info">
+                    @Html.DisplayNameFor(model => model.Morning1)
+                </td>
+                @foreach (var shift in Model)
+                {
+                    foreach (var prop in shift.GetType().GetProperties())
+                    {
+                        if (prop.PropertyType == typeof(Nullable<bool>))
+                        {
+                            var NameofShift = prop.Name;
+                            if (NameofShift.Substring(NameofShift.Length - 1, 1) == Convert.ToString(i))
+                            {
+                                if (NameofShift.Substring(0, 1) == Shifts[flag])
+                                {
+                                    var val = (Boolean)prop.GetValue(shift);
+                                    if (val)
+                                    {
+                                        <td>
+                                            @Html.ActionLink(name, "Edit", new { id = ID }, new { @class = "table-info" })
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+
+                                    i++;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            </tr>
+        }
+
+        @foreach (var items in Model.Take(1))
+        {
+            i = 1;
+            flag++;
+            <tr>
+                <td class="table-info">
+                    @Html.DisplayNameFor(model => model.Afternoon1)
+                </td>
+                @foreach (var shift in Model)
+                {
+                    foreach (var prop in shift.GetType().GetProperties())
+                    {
+                        if (prop.PropertyType == typeof(Nullable<bool>))
+                        {
+                            var NameofShift = prop.Name;
+                            if (NameofShift.Substring(NameofShift.Length - 1, 1) == Convert.ToString(i))
+                            {
+                                if (NameofShift.Substring(0, 1) == Shifts[flag])
+                                {
+                                    var val = (Boolean)prop.GetValue(shift);
+                                    if (val)
+                                    {
+                                        <td>
+                                            @Html.ActionLink(name, "Edit", new { id = ID }, new { @class = "table-info" })
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                    i++;
+                                }
+                            }
+                        }
+                    }
+                }
+            </tr>
+        }
+
+        @foreach (var items in Model.Take(1))
+        {
+            i = 1;
+            flag++;
+            <tr>
+                <td class="table-info">
+                    @Html.DisplayNameFor(model => model.Night1)
+                </td>
+                @foreach (var shift in Model)
+                {
+                    foreach (var prop in shift.GetType().GetProperties())
+                    {
+                        if (prop.PropertyType == typeof(Nullable<bool>))
+                        {
+                            var NameofShift = prop.Name;
+                            if (NameofShift.Substring(NameofShift.Length - 1, 1) == Convert.ToString(i))
+                            {
+                                if (NameofShift.Substring(0, 1) == Shifts[flag])
+                                {
+                                    var val = (Boolean)prop.GetValue(shift);
+                                    if (val)
+                                    {
+                                        <td>
+                                            @Html.ActionLink(name, "Edit", new { id = ID }, new { @class = "table-info" })
+                                        </td>
+                                    }
+                                    else
+                                    {
+                                        <td></td>
+                                    }
+                                    i++;
+                                }
+                            }
+                        }
+                    }
+                }
+            </tr>
+        }
+
+    </table>
+</div>
+

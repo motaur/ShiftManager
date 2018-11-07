@@ -1,0 +1,152 @@
+﻿@model IEnumerable<ShiftManagerProject.Models.PrevWeeks>
+
+@{
+    ViewBag.Title = "LastWeek";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 0;
+    DateTime lastSunday = DateTime.Now.AddDays(-1);
+    while (lastSunday.DayOfWeek != DayOfWeek.Sunday)
+    { lastSunday = lastSunday.AddDays(-1); }
+    var lastSundays = Convert.ToDateTime(lastSunday).ToString("dd/MM/yyyy");
+
+}
+
+<br /><br />
+      <h2>Your shifts for Week - @lastSundays</h2>
+<br /><br />
+      <div class='table-responsive'>
+          <table id="tablePreview" class="table table-hover table-bordered" style="text-align: center;">
+              <tr>
+                  <th>
+                  </th>
+                  @foreach (var item in Model.Select(x => x.Day).Distinct())
+                  {
+                      <th class="table-active">
+                          @Html.DisplayFor(x => item)
+                      </th>
+                  }
+              </tr>
+
+              @foreach (var items in Model.Take(1))
+              {
+                  <tr>
+                      <td class="table-primary">
+                          @Html.DisplayNameFor(model => model.Morning)
+                      </td>
+                      @foreach (var Mshift in Model)
+                      {
+
+                          if (Mshift.Morning == true)
+                          {
+                              if (i++ % 2 == 0)
+                              {
+                                  if (@Html.Encode(Session["UserSess"]) == Mshift.Name)
+                                  {
+                                      <td class="table-info">
+                                          @Html.DisplayFor(model => Mshift.Name)
+                                      </td>
+                                  }
+                                  else
+                                  {
+                                      <td>
+                                          @Html.DisplayFor(model => Mshift.Name)
+                                      </td>
+                                  }
+                              }
+
+                          }
+                      }
+                  </tr>
+                  i = 0;
+                  <tr>
+                      <td></td>
+                      @foreach (var Mshift in Model)
+                      {
+
+                          if (Mshift.Morning == true)
+                          {
+                              if (i++ % 2 != 0)
+                              {
+                                  if (@Html.Encode(Session["UserSess"]) == Mshift.Name)
+                                  {
+                                      <td class="table-info">
+                                          @Html.DisplayFor(model => Mshift.Name)
+                                      </td>
+                                  }
+                                  else
+                                  {
+                                      <td>
+                                          @Html.DisplayFor(model => Mshift.Name)
+                                      </td>
+                                  }
+                              }
+
+                          }
+                      }
+                  </tr>
+              }
+
+              @foreach (var items in Model.Take(1))
+              {
+                  <tr>
+                      <td class="table-primary">
+                          @Html.DisplayNameFor(model => model.Afternoon)
+                      </td>
+
+                      @foreach (var Ashift in Model)
+                      {
+
+                          if (Ashift.Afternoon == true)
+                          {
+                              if (@Html.Encode(Session["UserSess"]) == Ashift.Name)
+                              {
+                                  <td class="table-info">
+                                      @Html.DisplayFor(model => Ashift.Name)
+                                  </td>
+                              }
+                              else
+                              {
+                                  <td>
+                                      @Html.DisplayFor(model => Ashift.Name)
+                                  </td>
+                              }
+
+                          }
+                      }
+                  </tr>
+              }
+
+              @foreach (var items in Model.Take(1))
+              {
+                  <tr>
+                      <td class="table-primary">
+                          @Html.DisplayNameFor(model => model.Night)
+                      </td>
+                      @foreach (var Nshift in Model)
+                      {
+
+                          if (Nshift.Night == true)
+                          {
+                              if (@Html.Encode(Session["UserSess"]) == Nshift.Name)
+                              {
+                                  <td class="table-info">
+                                      @Html.DisplayFor(model => Nshift.Name)
+                                  </td>
+                              }
+                              else
+                              {
+                                  <td>
+                                      @Html.DisplayFor(model => Nshift.Name)
+                                  </td>
+                              }
+                          }
+                      }
+                  </tr>
+              }
+          </table>
+      </div>
+
+<br />
+
+
+

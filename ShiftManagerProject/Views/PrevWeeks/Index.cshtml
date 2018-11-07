@@ -1,0 +1,75 @@
+﻿@model IEnumerable<ShiftManagerProject.Models.PrevWeeks>
+
+@{
+    ViewBag.Title = "Previous Shifts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+<br />
+<h2>Previous Shifts</h2>
+<br /><br />
+@{
+    if (@ViewBag.records != 0)
+    {
+        <p class="btn btn-outline-success">
+            @Html.ActionLink("Delete Partially", "DeleteConfirmed")
+        </p>
+    }
+}
+
+<table class="table table-hover table-bordered" style="text-align: center;">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Day)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Morning)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Afternoon)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Night)
+        </th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Day)
+            </td>
+            <td>
+                @if (item.Morning == true)
+                {
+                    <i class="fas fa-check"></i>
+                }
+            </td>
+            <td>
+                @if (item.Afternoon == true)
+                {
+                    <i class="fas fa-check"></i>
+                }
+            </td>
+            <td>
+                @if (item.Night == true)
+                {
+                    <i class="fas fa-check"></i>
+                }
+            </td>
+        </tr>
+    }
+
+</table>

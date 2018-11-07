@@ -1,0 +1,65 @@
+﻿@model ShiftManagerProject.Models.PrevWeeks
+
+@{
+    ViewBag.Title = "Delete";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Delete</h2>
+
+<h3>Are you sure you want to delete this?</h3>
+<div>
+    <h4>PrevWeeks</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.EmployID)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.EmployID)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Day)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Day)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Morning)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Morning)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Afternoon)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Afternoon)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Night)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Night)
+        </dd>
+
+    </dl>
+
+    @using (Html.BeginForm()) {
+        @Html.AntiForgeryToken()
+
+        <div class="form-actions no-color">
+            <input type="submit" value="Delete" class="btn btn-default" /> |
+            @Html.ActionLink("Back to List", "Index")
+        </div>
+    }
+</div>

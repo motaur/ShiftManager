@@ -1,0 +1,254 @@
+﻿@model IEnumerable<ShiftManagerProject.Models.ShiftPref>
+
+@{
+    ViewBag.Title = "Admin-List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br /><br />
+<h2>Admin - List</h2>
+<br /><br />
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+<div class="class="d-flex p-8 bg-secondary text-white"">
+    <table id="tablePreview" class="table table-hover table-bordered table-responsive" style="text-align: center;">
+        @{
+            List<string> DayOfWeek = new List<string>(new string[] { "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" });
+            <tr>
+                @foreach (var item in DayOfWeek)
+                {
+                    <th class="table-active" colspan="3">
+                            @Html.DisplayFor(x => item)
+                    </th>
+                }
+            </tr>
+        }
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NoOfShifts)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Morning1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Afternoon1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Night1)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Morning2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Afternoon2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Night2)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Morning3)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Afternoon3)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Night3)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Morning4)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Afternoon4)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Night4)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Morning5)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Afternoon5)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Night5)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Morning6)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Afternoon6)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Night6)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Morning7)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Afternoon7)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Night7)
+            </th>
+        </tr>
+
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ID)
+                </td>
+                <td>
+                    @Html.ActionLink(item.Name, null, "", new { @title = item.Message })
+                </td>
+                <td>
+                    @Html.ActionLink(Convert.ToString(item.NoOfShifts), "Edit", "ShiftPrefs", new { id = item.ID }, null)
+                </td>
+                <td>
+                    @if (item.Morning1 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Afternoon1 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Night1 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Morning2 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Afternoon2 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Night2 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Morning3 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Afternoon3 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Night3 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Morning4 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Afternoon4 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Night4 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Morning5 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Afternoon5 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Night5 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Morning6 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Afternoon6 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Night6 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Morning7 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Afternoon7 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+                <td>
+                    @if (item.Night7 == true)
+                    {
+                        <i class="fas fa-check"></i>
+                    }
+                </td>
+            </tr>
+        }
+
+    </table>
+</div>
+@{
+    if (@ViewBag.closed != 0)
+    {
+        <p>
+            @Html.ActionLink("Close Week", "Close", "FinalShifts", new { @class = "btn btn-outline-info" })
+        </p>
+    }
+    else
+    {
+
+    }
+}

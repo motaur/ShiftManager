@@ -1,0 +1,110 @@
+﻿@using System.Security.Claims
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - NOC Shift Manager</title>
+    @Styles.Render("~/Content/css")
+    @Scripts.Render("~/bundles/modernizr")
+</head>
+<body>
+    <div class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container">
+            <div class="navbar-brand">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                @Html.ActionLink("NOC Shift Manager", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+            </div>
+            <div class="collapse navbar-collapse" id="navbarColor03">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item">@Html.ActionLink("Home", "Index", "Home")</li>
+
+                    <li class="nav-item">
+                        @if (System.Web.HttpContext.Current.Session["admin"] != null)
+                        {
+                            if ((bool)System.Web.HttpContext.Current.Session["admin"] == true)
+                            {
+                                @Html.ActionLink("Admin-List", "ListOfShifts", "FinalShifts")
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Your Preferences", "Index", "ShiftPrefs")
+                            }
+                        }
+                    </li>
+                    <li class="nav-item">
+                        @if (System.Web.HttpContext.Current.Session["admin"] != null)
+                        {
+                            if ((bool)System.Web.HttpContext.Current.Session["admin"] == true)
+                            {
+                                @Html.ActionLink("EShifts", "Index", "FinalShifts")
+                            }
+                            else
+                            {
+                                @Html.ActionLink("This Week", "LastWeek", "PrevWeeks")
+                            }
+                        }
+                    </li>
+                    <li class="nav-item">
+                        @if (System.Web.HttpContext.Current.Session["admin"] != null)
+                        {
+                            if ((bool)System.Web.HttpContext.Current.Session["admin"] == true)
+                            {
+                                @Html.ActionLink("Previous Shifts", "Index", "PrevWeeks")
+                            }
+                            else
+                            {
+                                @Html.ActionLink("Next Week", "FShiftsForEmployees", "FinalShifts")
+                            }
+                        }
+                    </li>
+                    <li class="nav-item">
+                        @if (System.Web.HttpContext.Current.Session["admin"] != null)
+                        {
+                            if ((bool)System.Web.HttpContext.Current.Session["admin"] == true)
+                            {
+                                @Html.ActionLink("Employees", "Index", "Employees")
+                            } 
+                        }
+                    </li>
+                </ul>
+
+                <ul style="width:auto; align-content:stretch;" class="nav navbar-nav navbar-right mr-auto">
+                    <li class="nav-item">
+                        @if (System.Web.HttpContext.Current.Session["UserSess"] != null)
+                        {
+                            <strong>Howdy @Html.Encode(Session["UserSess"]) !</strong>
+                        }
+                    </li>
+                    <li class="nav-item">
+                        @if (System.Web.HttpContext.Current.Session["UserSess"] != null)
+                        {
+                            @Html.ActionLink("Log Out", "Logout", "Home")
+                        }
+                        else
+                        {
+                            @Html.ActionLink("Log In", "Index", "Home")
+                        }
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <br /><br />
+    <div class="container body-content">
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Gabriella <i class="fab fa-studiovinari"></i> </p>
+        </footer>
+    </div>
+
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
+    @RenderSection("scripts", required: false)
+</body>
+</html>
