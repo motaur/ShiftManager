@@ -156,6 +156,14 @@
         @Html.ActionLink("Save and Delete Preferences", "Send", "", new { @class = "btn btn-outline-danger" })
     }
 }
+<script>
+     window.onload = function () {
+        if (!window.location.hash) {
+            window.location = window.location + '#loaded';
+            window.location.reload(true);
+        }
+    };
+</script>
 
 
 

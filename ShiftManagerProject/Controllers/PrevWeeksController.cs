@@ -2,10 +2,13 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
+using System.Data.Entity.Core.Objects;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Microsoft.Ajax.Utilities;
 using ShiftManagerProject.DAL;
 using ShiftManagerProject.Models;
 
@@ -14,6 +17,7 @@ namespace ShiftManagerProject.Controllers
     public class PrevWeeksController : Controller
     {
         private ShiftManagerContext db = new ShiftManagerContext();
+        private HistoryDeletionHandler HsDelete = new HistoryDeletionHandler();
 
         public ActionResult Index()
         {
@@ -22,10 +26,7 @@ namespace ShiftManagerProject.Controllers
             if (count.Count()>56)
             {
                 rec++;
-                foreach (var shift in db.PrevWeeks.Take(28))
-                {
-                    db.PrevWeeks.Remove(shift);
-                }
+                HsDelete.PrevWeeksDeletion();
             }
             ViewBag.records = rec;
 
@@ -34,47 +35,21 @@ namespace ShiftManagerProject.Controllers
 
         public ActionResult LastWeek()
         {
-            var count = db.PrevWeeks.ToList();
-            if (count.Count() > 56)
-            {
-                foreach (var shift in db.PrevWeeks.Take(28))
-                {
-                    db.PrevWeeks.Remove(shift);
-                }
-            }
-            db.SaveChanges();
+            HsDelete.PrevWeeksDeletion();
+            HsDelete.FshiftDeletion();
 
-            var countF = db.FinalShift.ToList();
-            if (countF.Count() >=84)
-            {
-                foreach (var shift in db.FinalShift.Take(countF.Count() - 56))
-                {
-                    db.FinalShift.Remove(shift);
-                }
-            }
-            db.SaveChanges();
+            var context = ((IObjectContextAdapter)db).ObjectContext;
+            var refreshableObjects = db.ChangeTracker.Entries().Select(c => c.Entity).ToList();
+            context.Refresh(RefreshMode.StoreWins, refreshableObjects);
 
-            Response.AddHeader("Refresh", "1");
             var nextshifts = db.PrevWeeks.Take(28);
             return View(nextshifts.ToList());
         }
 
         public ActionResult DeleteConfirmed()
         {
-            foreach (var shift in db.PrevWeeks.Take(28))
-            {
-                db.PrevWeeks.Remove(shift);
-            }
-            db.SaveChanges();
-
-            if (db.FinalShift.Count() >= 84)
-            {
-                foreach (var shift in db.FinalShift.Take(db.FinalShift.Count() - 56))
-                {
-                    db.FinalShift.Remove(shift);
-                }
-            }
-            db.SaveChanges();
+            HsDelete.PrevWeeksDeletion();
+            HsDelete.FshiftDeletion();
             return RedirectToAction("Index");
         }
 

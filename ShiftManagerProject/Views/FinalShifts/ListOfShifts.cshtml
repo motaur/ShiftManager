@@ -104,7 +104,7 @@
                     @Html.DisplayFor(modelItem => item.ID)
                 </td>
                 <td>
-                    @Html.ActionLink(item.Name, null, "", new { @title = item.Message })
+                    @Html.ActionLink(item.Name, "Edit", "ShiftPrefs", new { id = item.ID } , new { @title = item.Message })
                 </td>
                 <td>
                     @Html.ActionLink(Convert.ToString(item.NoOfShifts), "Edit", "ShiftPrefs", new { id = item.ID }, null)

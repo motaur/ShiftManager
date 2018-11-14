@@ -500,5 +500,65 @@ namespace ShiftManagerProject.Controllers
                 }
             }
         }
+
+        public void MorningReset(FinalShift BeforeChecking, int i)
+        {
+            BeforeChecking.Day = DayOfWeek(i);
+            BeforeChecking.Morning = true;
+            BeforeChecking.EmployID = 0;
+            BeforeChecking.Name = null;
+            SavingToDB(BeforeChecking);
+        }
+        
+        public void SavingToDB(FinalShift BeforeChecking)
+        {
+            db.FinalShift.Add(BeforeChecking);
+            db.SaveChanges();
+        }
+
+        public FinalShift ResetFeilds(FinalShift BeforeChecking)
+        {
+            BeforeChecking.EmployID = 0;
+            BeforeChecking.Name = null;
+            return BeforeChecking;
+        }
+
+        public void PrevShiftsRotation()
+        {
+            PrevWeeks pweek = new PrevWeeks();
+            var fshift = db.FinalShift.ToList();
+            foreach (var Fshift in fshift)
+            {
+                pweek.Day = Fshift.Day;
+                pweek.EmployID = Fshift.EmployID;
+                pweek.Name = Fshift.Name;
+                if (Fshift.Morning == null)
+                {
+                    pweek.Morning = false;
+                }
+                else
+                {
+                    pweek.Morning = Fshift.Morning;
+                }
+                if (Fshift.Afternoon == null)
+                {
+                    pweek.Afternoon = false;
+                }
+                else
+                {
+                    pweek.Afternoon = Fshift.Afternoon;
+                }
+                if (Fshift.Night == null)
+                {
+                    pweek.Night = false;
+                }
+                else
+                {
+                    pweek.Night = Fshift.Night;
+                }
+                db.PrevWeeks.Add(pweek);
+                db.SaveChanges();
+            }
+        }
     }
 }

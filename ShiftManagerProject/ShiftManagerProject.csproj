@@ -155,6 +155,7 @@
     <Compile Include="Controllers\EmployeesController.cs" />
     <Compile Include="Controllers\FinalShiftsController.cs" />
     <Compile Include="Controllers\FshiftRepository.cs" />
+    <Compile Include="Controllers\HistoryDeletionHandler.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\PrevWeeksController.cs" />
     <Compile Include="Controllers\ShiftPrefsController.cs" />
