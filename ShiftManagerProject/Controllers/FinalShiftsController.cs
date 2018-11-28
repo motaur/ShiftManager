@@ -30,6 +30,54 @@ namespace ShiftManagerProject.Controllers
             return View(db.ShiftPref.ToList());
         }
 
+        public ActionResult FixedShifts()
+        {
+            FinalShift finalShift = new FinalShift
+            {
+                Employees = db.Employees.ToList()
+            };
+            return View(finalShift);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult FixedShifts(FormCollection emp)
+        {
+           
+            List<FinalShift> obj = new List<FinalShift>();
+
+            var name = Request.Form["Name"].Split(',').ToArray();
+            var D = Request.Form["Day"].Split(',').ToArray();
+            var M = Request.Form["Morning"].Split(',').ToArray();
+            var A = Request.Form["Afternoon"].Split(',').ToArray();
+            var N = Request.Form["Night"].Split(',').ToArray();
+
+            for (var i = 0; i < name.Length; i++)
+            {
+                //foreach(var names in name)
+                //{
+                //    if(names!="")
+                //    {
+                //        foreach(var d in D)
+                //        {
+                //            if(d[d.Length-1]=='1')
+                //            {
+                //                foreach(M)
+                //            }
+                //        }
+                //    }
+                //}
+                obj.Add(new FinalShift()
+                {
+                    Name = name[i],
+                    Day = D[i],
+                    Morning = Convert.ToBoolean(M[i]),
+                    Afternoon = Convert.ToBoolean(A[i]),
+                    Night = Convert.ToBoolean(N[i])
+                });
+            }
+            return View();
+        }
 
         public ActionResult Index()
         {

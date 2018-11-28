@@ -509,7 +509,7 @@ namespace ShiftManagerProject.Controllers
             BeforeChecking.Name = null;
             SavingToDB(BeforeChecking);
         }
-        
+
         public void SavingToDB(FinalShift BeforeChecking)
         {
             db.FinalShift.Add(BeforeChecking);
@@ -560,5 +560,154 @@ namespace ShiftManagerProject.Controllers
                 db.SaveChanges();
             }
         }
+
+        public bool FutureShifts(int x, string y, Employees employee)
+        {
+            int flag = 0;
+            if (y == "M")
+            {
+                var futureShifts = db.FinalShift.Where(k => k.Day == DayOfWeek(x));
+                foreach (var shift in futureShifts)
+                {
+                    if (shift.EmployID == employee.ID)
+                    {
+                        flag++;
+                    }
+                }
+                if (flag != 0)
+                {
+                    return true;
+                }
+            }
+
+            if (y == "A")
+            {
+                var futureShifts = db.FinalShift.Where(k => (k.Day == DayOfWeek(x) && k.Night == true) || (k.Day == DayOfWeek(x + 1) && k.Morning == true));
+
+                foreach (var shift in futureShifts)
+                {
+                    if (shift.EmployID == employee.ID)
+                    {
+                        flag++;
+                    }
+                }
+                if (flag != 0)
+                {
+                    return true;
+                }
+            }
+
+            if (y == "N")
+            {
+                var futureShifts = db.FinalShift.Where(k => k.Day == DayOfWeek(x + 1) && (k.Morning == true || k.Afternoon == true));
+
+                foreach (var shift in futureShifts)
+                {
+                    if (shift.EmployID == employee.ID)
+                    {
+                        flag++;
+                    }
+                }
+                if (flag != 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool PreviousShifts(int x, string y, Employees employee)
+        {
+            int flag = 0;
+            if (y == "M")
+            {
+                var PrevShifts = db.FinalShift.Where(k => (k.Day == DayOfWeek(x-1) && (k.Afternoon==true || k.Night==true)) || (k.Day == DayOfWeek(x) && k.Morning == true));
+                foreach (var shift in PrevShifts)
+                {
+                    if (shift.EmployID == employee.ID)
+                    {
+                        flag++;
+                    }
+                }
+                if (flag != 0)
+                {
+                    return true;
+                }
+            }
+
+            if (y == "A")
+            {
+                var PrevShifts = db.FinalShift.Where(k => (k.Day == DayOfWeek(x-1) && k.Night == true) || (k.Day == DayOfWeek(x) && k.Morning == true));
+
+                foreach (var shift in PrevShifts)
+                {
+                    if (shift.EmployID == employee.ID)
+                    {
+                        flag++;
+                    }
+                }
+                if (flag != 0)
+                {
+                    return true;
+                }
+            }
+
+            if (y == "N")
+            {
+                var PrevShifts = db.FinalShift.Where(k => k.Day == DayOfWeek(x) && (k.Morning == true || k.Afternoon == true));
+
+                foreach (var shift in PrevShifts)
+                {
+                    if (shift.EmployID == employee.ID)
+                    {
+                        flag++;
+                    }
+                }
+                if (flag != 0)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public bool Exist(int x, string y)
+        {
+            var futureShifts = db.FinalShift.Where(k => k.Day == DayOfWeek(x));
+            if (futureShifts.Any())
+            {
+                switch (y)
+                {
+                    case "M":
+                        foreach (var shift in futureShifts)
+                        {
+                            if (shift.Morning == true)
+                            {
+                                return true;
+                            }
+                        }
+                        break;
+                    case "A":
+                        foreach (var shift in futureShifts)
+                        {
+                            if (shift.Afternoon == true)
+                            {
+                                return true;
+                            }
+                        }
+                        break;
+                    case "N":
+                        foreach (var shift in futureShifts)
+                        {
+                            if (shift.Night == true)
+                            {
+                                return true;
+                            }
+                        }
+                        break;
+                }
+            }
+            return false;
+        }   
     }
 }

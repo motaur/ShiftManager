@@ -314,6 +314,7 @@
     <Content Include="Views\PrevWeeks\Delete.cshtml" />
     <Content Include="Views\PrevWeeks\Index.cshtml" />
     <Content Include="Views\PrevWeeks\LastWeek.cshtml" />
+    <Content Include="Views\FinalShifts\FixedShifts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

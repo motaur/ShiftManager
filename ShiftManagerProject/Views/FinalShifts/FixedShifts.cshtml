@@ -1,0 +1,118 @@
+﻿@model ShiftManagerProject.Models.FinalShift
+
+@{
+    ViewBag.Title = "FixedShifts";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int i = 0, s = 0;
+
+    List<string> DayOfWeek = new List<string>(new string[] { "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" });
+    List<string> Shift = new List<string>(new string[] { "Morning", "Afternoon", "Night" });
+    List<SelectListItem> Employees = new List<SelectListItem>();
+}
+
+<h2>Fixed Shifts</h2>
+<br /><br />
+@{
+    foreach (var name in Model.Employees)
+    {
+        Employees.Add(new SelectListItem
+        {
+            Text = name.FirstName,
+            Value = name.FirstName
+        });
+    }
+}
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class='table-responsive'>
+        <table id="tablePreview" class="table table-hover table-bordered">
+            <tr class="table-active" style="text-align:center;">
+                <th>
+                </th>
+                @foreach (var day in DayOfWeek)
+                {
+                    if (day != "")
+                    {
+                        <th>
+                            @Html.DisplayFor(x => day)
+                        </th>
+                    }
+                }
+            </tr>
+            <tr>
+                <td class="table-info">
+                    @Html.DisplayNameFor(model => model.Morning)
+                </td>
+                @for (i = 1, s = 0; i < 8; i++)
+                {
+                    <td>
+                        @Html.DropDownListFor(model => model.Name, Employees, "-- Select Employee --", new { onchange = "this.form.submit();" })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        <div class="test">
+                            @Html.HiddenFor(model => model.Morning, new { @Value = false })
+                            @Html.ValidationMessageFor(model => model.Morning, "", new { @class = "text-danger" })
+                            @Html.HiddenFor(model => model.Day, new { @Value = DayOfWeek[i] })
+                            @Html.ValidationMessageFor(model => model.Day, "", new { @class = "text-danger" })
+                        </div>
+                    </td>
+                }
+            </tr>
+            <tr>
+                <td></td>
+                @for (i = 1, s = 0; i < 8; i++)
+                {
+                    <td>
+                        @Html.DropDownListFor(model => model.Name, Employees, "-- Select Employee --")
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(model => model.Morning, new { @Value = false })
+                        @Html.ValidationMessageFor(model => model.Morning, "", new { @class = "text-danger" })
+                        @Html.HiddenFor(model => model.Day, new { @Value = DayOfWeek[i] })
+                        @Html.ValidationMessageFor(model => model.Day, "", new { @class = "text-danger" })
+                    </td>
+                }
+            </tr>
+            <tr>
+                <td class="table-success">
+                    @Html.DisplayNameFor(model => model.Afternoon)
+                </td>
+                @for (i = 1, s = 1; i < 8; i++)
+                {
+                    <td>
+                        @Html.DropDownListFor(model => model.Name, Employees, "-- Select Employee --", new { x = i, y = Shift[s] })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </td>
+                }
+            </tr>
+            <tr>
+                <td class="table-warning">
+                    @Html.DisplayNameFor(model => model.Night)
+                </td>
+                @for (i = 1, s = 2; i < 8; i++)
+                {
+                    <td>
+                        @Html.DropDownListFor(model => model.Name, Employees, "-- Select Employee --", new { x = i, y = Shift[s] })
+                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                    </td>
+                }
+            </tr>
+        </table>
+    </div>
+    <br /><br />
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" id="FSave" />
+        </div>
+    </div>
+}
+
+@Scripts.Render("~/bundles/jquery")
+@Scripts.Render("~/bundles/bootstrap")
+
+    <script>
+        $("#Name").on("change", function () {
+            $("#Morning").val(true);
+        });
+    </script>
+
