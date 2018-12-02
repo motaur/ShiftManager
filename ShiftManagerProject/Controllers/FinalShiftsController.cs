@@ -199,50 +199,67 @@ namespace ShiftManagerProject.Controllers
 
                                         if (BeforeChecking.Night == true)
                                         {
-                                            NCheck: foreach (var Nshift in FShift)
+                                            if (NightFlag[j] >= 2)
                                             {
-                                                if (NightFlag[j] >= 2)
-                                                {
-                                                    NoOfShifts[j] -= 1;
-                                                    NightFlag[j] -= 1;
-                                                    BeforeChecking = FSrespo.ResetFeilds(BeforeChecking);
-                                                    goto Double;
-                                                }
+                                                NoOfShifts[j] -= 1;
+                                                //NightFlag[j] -= 1;
+                                                //BeforeChecking = FSrespo.ResetFeilds(BeforeChecking);
+                                                BeforeChecking = (FSrespo.CheckPref(i, Letter));
+                                                DoubleChecker++;
+                                                goto Checker1;
+                                            }
+                           /*                 NCheck:*/ foreach (var Nshift in FShift)
+                                            {
                                                 if (flag == 3)
                                                 {
-                                                    NightFlag[j] += 1;
-                                                    if(NightFlag[j] >=2)
+                                                    if (NightFlag[j] >= 2)
                                                     {
                                                         NoOfShifts[j] -= 1;
-                                                        NightFlag[j] -= 1;
+                                                        //NightFlag[j] -= 1;
                                                         BeforeChecking = FSrespo.ResetFeilds(BeforeChecking);
                                                         goto Double;
                                                     }
+                                                    NightFlag[j] += 1;
                                                     goto Finalize;
                                                 }
-                                                if (FSrespo.ListOfEmployees()[j] == Nshift.EmployID && Nshift.Night == true)
+
+                                                if (Nshift.Night == true)
                                                 {
-                                                    BeforeChecking = (FSrespo.CheckPref(i, Letter));
-                                                    if(BeforeChecking.EmployID == FSrespo.ListOfEmployees()[j])
+                                                    if (FSrespo.ListOfEmployees()[j] == Nshift.EmployID && Nshift.Night == true)
                                                     {
-                                                        BeforeChecking = FSrespo.CheckPref(i, Letter);
-                                                    }
-                                                    else
-                                                    {
-                                                        flag++;
-                                                        NoOfShifts[j] -= 1;
-                                                        goto Checker1;
+                                                        BeforeChecking = (FSrespo.CheckPref(i, Letter));
+                                                        if (BeforeChecking.EmployID == FSrespo.ListOfEmployees()[j])
+                                                        {
+                                                            BeforeChecking = FSrespo.CheckPref(i, Letter);
+                                                            if (BeforeChecking.EmployID != FSrespo.ListOfEmployees()[j])
+                                                            {
+                                                                flag++;
+                                                                NoOfShifts[j] -= 1;
+                                                                goto Checker1;
+                                                            }
+                                                            else
+                                                            {
+                                                                flag = 3;
+                                                            }
+                                                        }
+                                                        else
+                                                        {
+                                                            flag++;
+                                                            NoOfShifts[j] -= 1;
+                                                            goto Checker1;
+                                                        }
                                                     }
                                                 }
+                                                //if (NightFlag[j] >= 2)
+                                                //{
+                                                //    flag = 3;
+                                                //    goto NCheck;
+                                                //}
+                                                //NightFlag[j] += 1;
                                             }
-                                            if (NightFlag[j] >= 2)
-                                            {
-                                                goto NCheck;
-                                            }
-                                            NightFlag[j] += 1;
                                         }
 
-                                        Finalize: FShift.Add(BeforeChecking);
+                              Finalize: FShift.Add(BeforeChecking);
                                         FSrespo.SavingToDB(BeforeChecking);
                                         break;
                                     }
