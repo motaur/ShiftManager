@@ -167,6 +167,8 @@ namespace ShiftManagerProject.Models
         [DisplayName("Night")]
         public Nullable<bool> Night { get; set; }
 
+        public int OfDayType { get; set; }
+
         public IEnumerable<Employees> Employees { get; set; }
     }
 

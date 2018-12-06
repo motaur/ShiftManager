@@ -30,7 +30,7 @@ namespace ShiftManagerProject.Controllers
             return View(db.ShiftPref.ToList());
         }
 
-        public ActionResult FixedShifts()
+        public ActionResult Fixed()
         {
             FinalShift finalShift = new FinalShift
             {
@@ -41,42 +41,136 @@ namespace ShiftManagerProject.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult FixedShifts(FormCollection emp)
+        public ActionResult Fixed(FinalShift FixedShift)
         {
-           
-            List<FinalShift> obj = new List<FinalShift>();
-
-            var name = Request.Form["Name"].Split(',').ToArray();
-            var D = Request.Form["Day"].Split(',').ToArray();
-            var M = Request.Form["Morning"].Split(',').ToArray();
-            var A = Request.Form["Afternoon"].Split(',').ToArray();
-            var N = Request.Form["Night"].Split(',').ToArray();
-
-            for (var i = 0; i < name.Length; i++)
+            bool flag = false;
+            Employees Emp = db.Employees.FirstOrDefault(x => x.FirstName == FixedShift.Name);
+            try
             {
-                //foreach(var names in name)
-                //{
-                //    if(names!="")
-                //    {
-                //        foreach(var d in D)
-                //        {
-                //            if(d[d.Length-1]=='1')
-                //            {
-                //                foreach(M)
-                //            }
-                //        }
-                //    }
-                //}
-                obj.Add(new FinalShift()
+                if (Emp != null && ModelState.IsValid)
                 {
-                    Name = name[i],
-                    Day = D[i],
-                    Morning = Convert.ToBoolean(M[i]),
-                    Afternoon = Convert.ToBoolean(A[i]),
-                    Night = Convert.ToBoolean(N[i])
-                });
+                    FixedShift.EmployID = Emp.ID;
+                    flag = true;
+                    FixedShift.OfDayType = 0;
+                    db.FinalShift.Add(FixedShift);
+                    db.SaveChanges();
+                    return RedirectToAction("Fixed");
+                }
             }
-            return View();
+            catch
+            {
+                if (flag)
+                {
+                    ModelState.AddModelError("Name", "Error Saving this shift");
+                    return View(FixedShift);
+                }
+                ModelState.AddModelError("Name", "Employee's ID was not found or matched");
+                return View(FixedShift);
+            }
+            return View(FixedShift);
+        }
+
+        public ActionResult FClose()
+        {
+            HsDelete.FshiftDeletion();
+            List<string> FirstLetter = new List<string>(new string[] { "M", "A", "N" });
+            List<FinalShift> FShift = new List<FinalShift>();
+            int i = 1, j = 0, flag = 0, x, MornChecker = 0, DoubleChecker = 0, y=0;
+            string NameofShift = null;
+            ShiftPref Stype = new ShiftPref();
+            List<int> NightFlag = new List<int>(new int[FSrespo.ListOfEmployees().Count]);
+            List<int> NoOfShifts = new List<int>(new int[FSrespo.ListOfEmployees().Count]);
+
+            foreach (var prop in Stype.GetType().GetProperties())
+            {
+                if (prop.PropertyType == typeof(Nullable<bool>))
+                {
+                    NameofShift = prop.Name;
+                    for (i = 1; i < Convert.ToInt16(NameofShift.Substring(NameofShift.Length - 1, 1)); i++) ;
+                    foreach (var Letter in FirstLetter)
+                    {
+                        if (Letter == "M" && prop.Name.Substring(0, 1) == Letter)
+                        {
+                            if (FSrespo.Exist(i, Letter))
+                            {
+                                continue;
+                            }
+
+                            for (x = 0; x < 2; x++)
+                            {
+                                if (x == 0 && FSrespo.OneMornExist(i, Letter))
+                                {
+                                    continue;
+                                }
+
+                                FinalShift BeforeChecking = (FSrespo.NewCheckerP(i, Letter));
+
+                                if (BeforeChecking != null)
+                                {
+                                    FSrespo.SavingToDB(BeforeChecking);
+                                    continue;
+                                }
+                                else
+                                {
+                                    BeforeChecking = new FinalShift();
+                                    FSrespo.MorningReset(BeforeChecking, i);
+                                    continue;
+                                }
+                            }
+                        }
+                        else if (Letter != "M" && prop.Name.Substring(0, 1) == Letter)
+                        {
+                            if (FSrespo.Exist(i, Letter))
+                            {
+                                continue;
+                            }
+
+                            FinalShift BeforeChecking = (FSrespo.NewCheckerP(i, Letter));
+
+                            if (BeforeChecking != null)
+                            {
+                                FSrespo.SavingToDB(BeforeChecking);
+                                continue;
+                            }
+                            else
+                            {
+                                BeforeChecking = new FinalShift
+                                {
+                                    Day = FSrespo.DayOfWeek(i)
+                                };
+                                BeforeChecking = FSrespo.ResetFeilds(BeforeChecking);
+                                switch(Letter)
+                                {
+                                    case "A":
+                                        BeforeChecking.Afternoon = true;
+                                        break;
+                                    case "N":
+                                        BeforeChecking.Night = true;
+                                        break;
+                                }
+                                FSrespo.SavingToDB(BeforeChecking);
+                                continue;
+                            }
+
+                        }
+                    }
+                }
+            }
+            return RedirectToAction("Findex");
+        }
+
+        public ActionResult Findex()
+        {
+            int ad = 0;
+            if (!db.ShiftPref.Any())
+            {
+                ad = 1;
+            }
+            ViewBag.admin = ad;
+
+            var shifts = db.FinalShift.OrderByDescending(x => x.OfDayType).OrderBy(x => x.OfDayType).ToList();
+
+            return View(shifts);
         }
 
         public ActionResult Index()
@@ -169,7 +263,7 @@ namespace ShiftManagerProject.Controllers
                         {
                             if (prop.Name.Substring(0, 1) == Letter)
                             {
-                                
+
                                 FinalShift BeforeChecking = new FinalShift();
                                 BeforeChecking = (FSrespo.CheckPref(i, Letter));
 
@@ -208,7 +302,8 @@ namespace ShiftManagerProject.Controllers
                                                 DoubleChecker++;
                                                 goto Checker1;
                                             }
-                           /*                 NCheck:*/ foreach (var Nshift in FShift)
+                                            /*                 NCheck:*/
+                                            foreach (var Nshift in FShift)
                                             {
                                                 if (flag == 3)
                                                 {
@@ -259,7 +354,7 @@ namespace ShiftManagerProject.Controllers
                                             }
                                         }
 
-                              Finalize: FShift.Add(BeforeChecking);
+                                        Finalize: FShift.Add(BeforeChecking);
                                         FSrespo.SavingToDB(BeforeChecking);
                                         break;
                                     }

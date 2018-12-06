@@ -1,0 +1,66 @@
+﻿@model ShiftManagerProject.Models.FinalShift
+
+@{
+    ViewBag.Title = "Fixed";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    List<string> DayOfWeek = new List<string>(new string[] { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" });
+    List<string> Shift = new List<string>(new string[] { "Morning", "Afternoon", "Night" });
+    List<SelectListItem> Employees = new List<SelectListItem>();
+    foreach (var name in Model.Employees)
+    {
+        Employees.Add(new SelectListItem
+        {
+            Text = name.FirstName,
+            Value = name.FirstName
+        });
+    }
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <br /><br />
+    <h2>Fixed Shifts</h2>
+    <br />
+    <div class="form-horizontal">
+        <div class="col">
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Day, new SelectList(DayOfWeek.ToList()), "-- Select Day --", htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.ValidationMessageFor(model => model.Day, "", new { @class = "text-danger" })
+            </div><br />
+            <div class="col-md-10">
+                @Html.DropDownListFor(model => model.Name, Employees, "-- Select Employee --", htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div><br /><br />
+            <div class="col-md-10">
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.Morning)
+                    @Html.ValidationMessageFor(model => model.Morning, "", new { @class = "text-danger" })
+                </div><br />
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.Afternoon)
+                    @Html.ValidationMessageFor(model => model.Afternoon, "", new { @class = "text-danger" })
+                </div><br />
+                <div class="checkbox">
+                    @Html.EditorFor(model => model.Night)
+                    @Html.ValidationMessageFor(model => model.Night, "", new { @class = "text-danger" })
+                </div><br />
+            </div>
+        </div>
+
+        <br /><br />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+    <br /><br />
+    @Html.ActionLink("Close Week", "FClose", "FinalShifts", new { @class = "btn btn-outline-info" })
+}
+
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+

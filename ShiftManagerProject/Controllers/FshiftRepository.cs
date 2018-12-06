@@ -16,6 +16,7 @@ namespace ShiftManagerProject.Controllers
     {
         private ShiftManagerContext db = new ShiftManagerContext();
         static Random rnd = new Random();
+        static int DaySerial = 0;
 
         public FinalShift CheckPref(int x, string y)
         {
@@ -538,6 +539,7 @@ namespace ShiftManagerProject.Controllers
 
         public void SavingToDB(FinalShift BeforeChecking)
         {
+            BeforeChecking.OfDayType = DaySerial++;
             db.FinalShift.Add(BeforeChecking);
             db.SaveChanges();
         }
@@ -589,10 +591,12 @@ namespace ShiftManagerProject.Controllers
 
         public bool FutureShifts(int x, string y, Employees employee)
         {
+            string dayofweek = DayOfWeek(x);
+            string Fdayofweek = x!=7 ? DayOfWeek(x + 1): DayOfWeek(x);
             int flag = 0;
             if (y == "M")
             {
-                var futureShifts = db.FinalShift.Where(k => k.Day == DayOfWeek(x));
+                var futureShifts = db.FinalShift.Where(k => k.Day == dayofweek);
                 foreach (var shift in futureShifts)
                 {
                     if (shift.EmployID == employee.ID)
@@ -608,15 +612,31 @@ namespace ShiftManagerProject.Controllers
 
             if (y == "A")
             {
-                var futureShifts = db.FinalShift.Where(k => (k.Day == DayOfWeek(x) && k.Night == true) || (k.Day == DayOfWeek(x + 1) && k.Morning == true));
-
-                foreach (var shift in futureShifts)
+                if(x!=7)
                 {
-                    if (shift.EmployID == employee.ID)
+                    var futureShifts = db.FinalShift.Where(k => (k.Day == dayofweek && k.Night == true) || (k.Day == Fdayofweek && k.Morning == true));
+
+                    foreach (var shift in futureShifts)
                     {
-                        flag++;
+                        if (shift.EmployID == employee.ID)
+                        {
+                            flag++;
+                        }
                     }
                 }
+                else
+                {
+                    var futureShifts = db.FinalShift.Where(k => k.Day == dayofweek && k.Night == true);
+
+                    foreach (var shift in futureShifts)
+                    {
+                        if (shift.EmployID == employee.ID)
+                        {
+                            flag++;
+                        }
+                    }
+                }
+               
                 if (flag != 0)
                 {
                     return true;
@@ -625,15 +645,19 @@ namespace ShiftManagerProject.Controllers
 
             if (y == "N")
             {
-                var futureShifts = db.FinalShift.Where(k => k.Day == DayOfWeek(x + 1) && (k.Morning == true || k.Afternoon == true));
-
-                foreach (var shift in futureShifts)
+                if (x != 7)
                 {
-                    if (shift.EmployID == employee.ID)
+                    var futureShifts = db.FinalShift.Where(k => k.Day == Fdayofweek && (k.Morning == true || k.Afternoon == true));
+
+                    foreach (var shift in futureShifts)
                     {
-                        flag++;
+                        if (shift.EmployID == employee.ID)
+                        {
+                            flag++;
+                        }
                     }
                 }
+
                 if (flag != 0)
                 {
                     return true;
@@ -644,17 +668,34 @@ namespace ShiftManagerProject.Controllers
 
         public bool PreviousShifts(int x, string y, Employees employee)
         {
+            string dayofweek = DayOfWeek(x);
+            string lastdayofweek = DayOfWeek(x - 1);
             int flag = 0;
             if (y == "M")
             {
-                var PrevShifts = db.FinalShift.Where(k => (k.Day == DayOfWeek(x - 1) && (k.Afternoon == true || k.Night == true)) || (k.Day == DayOfWeek(x) && k.Morning == true));
-                foreach (var shift in PrevShifts)
+                if (x == 1)
                 {
-                    if (shift.EmployID == employee.ID)
+                    var LastDay = db.PrevWeeks.OrderByDescending(p => p.ID).Take(2);
+                    foreach (var LastShift in LastDay)
                     {
-                        flag++;
+                        if (LastShift.EmployID == employee.ID)
+                        {
+                            flag++;
+                        }
                     }
                 }
+                else
+                {
+                    var PrevShifts = db.FinalShift.Where(k => (k.Day == lastdayofweek && (k.Afternoon == true || k.Night == true)) || (k.Day == dayofweek && k.Morning == true));
+                    foreach (var shift in PrevShifts)
+                    {
+                        if (shift.EmployID == employee.ID)
+                        {
+                            flag++;
+                        }
+                    }
+                }
+
                 if (flag != 0)
                 {
                     return true;
@@ -663,15 +704,40 @@ namespace ShiftManagerProject.Controllers
 
             if (y == "A")
             {
-                var PrevShifts = db.FinalShift.Where(k => (k.Day == DayOfWeek(x - 1) && k.Night == true) || (k.Day == DayOfWeek(x) && k.Morning == true));
-
-                foreach (var shift in PrevShifts)
+                if(x==1)
                 {
-                    if (shift.EmployID == employee.ID)
+                    var LastDay = db.PrevWeeks.OrderByDescending(p => p.ID).Take(1);
+                    foreach (var lastday in LastDay)
                     {
-                        flag++;
+                        if (lastday.EmployID == employee.ID)
+                        {
+                            flag++;
+                        }
+                    }
+
+                    var PrevShifts = db.FinalShift.Where(k => k.Day == dayofweek && k.Morning == true);
+
+                    foreach (var shift in PrevShifts)
+                    {
+                        if (shift.EmployID == employee.ID)
+                        {
+                            flag++;
+                        }
                     }
                 }
+                else
+                {
+                    var PrevShifts = db.FinalShift.Where(k => (k.Day == lastdayofweek && k.Night == true) || (k.Day == dayofweek && k.Morning == true));
+
+                    foreach (var shift in PrevShifts)
+                    {
+                        if (shift.EmployID == employee.ID)
+                        {
+                            flag++;
+                        }
+                    }
+                }
+              
                 if (flag != 0)
                 {
                     return true;
@@ -680,15 +746,31 @@ namespace ShiftManagerProject.Controllers
 
             if (y == "N")
             {
-                var PrevShifts = db.FinalShift.Where(k => k.Day == DayOfWeek(x) && (k.Morning == true || k.Afternoon == true));
-
-                foreach (var shift in PrevShifts)
+                if(x==1)
                 {
-                    if (shift.EmployID == employee.ID)
+                    var PrevShifts = db.FinalShift.Where(k => (k.Day == dayofweek && (k.Morning == true || k.Afternoon == true)) || (k.Day == lastdayofweek && k.Night == true));
+
+                    foreach (var shift in PrevShifts)
                     {
-                        flag++;
+                        if (shift.EmployID == employee.ID)
+                        {
+                            flag++;
+                        }
                     }
                 }
+                else
+                {
+                    var PrevShifts = db.FinalShift.Where(k => k.Day == dayofweek && (k.Morning == true || k.Afternoon == true));
+
+                    foreach (var shift in PrevShifts)
+                    {
+                        if (shift.EmployID == employee.ID)
+                        {
+                            flag++;
+                        }
+                    }
+                }
+              
                 if (flag != 0)
                 {
                     return true;
@@ -699,7 +781,56 @@ namespace ShiftManagerProject.Controllers
 
         public bool Exist(int x, string y)
         {
-            var futureShifts = db.FinalShift.Where(k => k.Day == DayOfWeek(x));
+            int flag = 0;
+            string dayofweek = DayOfWeek(x);
+            List<FinalShift> futureShifts = db.FinalShift.Where(k => k.Day == dayofweek).ToList();
+            if (futureShifts.Any())
+            {
+                switch (y)
+                {
+                    case "M":
+                        foreach (var shift in futureShifts)
+                        {
+                            if (shift.Morning == true)
+                            {
+                                AssignDayType(shift);
+                                flag++;
+                            }
+                        }
+                        if (flag == 2)
+                        {
+                            return true;
+                        }
+                        break;
+                    case "A":
+                        foreach (var shift in futureShifts)
+                        {
+                            if (shift.Afternoon == true)
+                            {
+                                AssignDayType(shift);
+                                return true;
+                            }
+                        }
+                        break;
+                    case "N":
+                        foreach (var shift in futureShifts)
+                        {
+                            if (shift.Night == true)
+                            {
+                                AssignDayType(shift);
+                                return true;
+                            }
+                        }
+                        break;
+                }
+            }
+            return false;
+        }
+
+        public bool OneMornExist(int x, string y)
+        {
+            string dayofweek = DayOfWeek(x);
+            var futureShifts = db.FinalShift.Where(k => k.Day == dayofweek);
             if (futureShifts.Any())
             {
                 switch (y)
@@ -713,27 +844,172 @@ namespace ShiftManagerProject.Controllers
                             }
                         }
                         break;
-                    case "A":
-                        foreach (var shift in futureShifts)
-                        {
-                            if (shift.Afternoon == true)
-                            {
-                                return true;
-                            }
-                        }
-                        break;
-                    case "N":
-                        foreach (var shift in futureShifts)
-                        {
-                            if (shift.Night == true)
-                            {
-                                return true;
-                            }
-                        }
-                        break;
                 }
             }
             return false;
+        }
+
+        public bool HasTwoAfternoons(long ID, int x)
+        {
+            if (x > 2)
+            {
+                int a = 0;
+                var PrevShift = db.FinalShift.Where(k => k.Afternoon == true).OrderByDescending(p => p.ID).Take(x - 1);
+                foreach (var AfternoonShift in PrevShift)
+                {
+                    if (ID == AfternoonShift.EmployID)
+                    {
+                        a++;
+                    }
+                    if (a == 2)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+        public bool HasTwoNights(long ID, int x)
+        {
+            if (x > 2)
+            {
+                int a = 0;
+                var PrevShift = db.FinalShift.Where(k => k.Night == true).OrderByDescending(p => p.ID).Take(x - 1);
+                foreach (var NightShift in PrevShift)
+                {
+                    if (ID == NightShift.EmployID)
+                    {
+                        a++;
+                    }
+                    if (a == 2)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public bool CanAddShift(long ID)
+        {
+            var EmployShifts = db.FinalShift.Where(k => k.EmployID == ID);
+            ShiftPref pref = db.ShiftPref.SingleOrDefault(ShiftPref => ShiftPref.EmployID == ID);
+
+            if(EmployShifts.Count() < pref.NoOfShifts)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public FinalShift NewCheckerP(int x, string y)
+        {
+
+            List<Employees> Workers = new List<Employees>();
+            int flag = 0;
+            FinalShift Fshift = new FinalShift();
+            int r;
+
+            foreach (var employ in db.Employees)
+            {
+                string shiftofday = null;
+                ShiftPref pref = db.ShiftPref.SingleOrDefault(ShiftPref => ShiftPref.EmployID == employ.ID);
+
+                if (pref == null)
+                {
+                    continue;
+                }
+
+                if (!PreviousShifts(x, y, employ))
+                {
+                    if (!FutureShifts(x, y, employ))
+                    {
+                        foreach (var shift in pref.GetType().GetProperties())
+                        {
+                            if (shift.Name.EndsWith(Convert.ToString(x)) && shift.Name.StartsWith(y))
+                            {
+                                shiftofday = shift.Name;
+                                shiftofday = shiftofday.Remove(shiftofday.Length - 1);
+
+                                var val = (Boolean)shift.GetValue(pref);
+                                if (val && CanAddShift(employ.ID))
+                                {
+                                    Workers.Add(employ);
+                                    break;
+                                }
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+
+      Redo: if (Workers.Any())
+            {
+                r = rnd.Next(Workers.Count);
+                Fshift = new FinalShift
+                {
+                    EmployID = Workers[r].ID,
+                    Name = Workers[r].FirstName,
+                    Day = DayOfWeek(x)
+                };
+            }
+            else
+            {
+                return null;
+            }
+
+            switch (y)
+            {
+                case "M":
+                    Fshift.Morning = true;
+                    break;
+                case "A":
+                    if (HasTwoAfternoons(Fshift.EmployID, x))
+                    {
+                        if (flag == 3)
+                        {
+                            return null;
+                        }
+                        Workers.Remove(Workers[r]);
+                        flag++;
+                        goto Redo;
+                    }
+                    Fshift.Afternoon = true;
+                    break;
+                case "N":
+                    if (HasTwoNights(Fshift.EmployID, x))
+                    {
+                        if (flag == 3)
+                        {
+                            return null;
+                        }
+                        Workers.Remove(Workers[r]);
+                        flag++;
+                        goto Redo;
+                    }
+                    Fshift.Night = true;
+                    break;
+            }
+
+            return Fshift;
+
+        }
+
+        public void AssignDayType (FinalShift Fshift)
+        {
+            var result = db.FinalShift.SingleOrDefault(b => b.ID == Fshift.ID);
+
+            if (result != null)
+            {
+                Fshift.OfDayType = DaySerial++;
+                db.Entry(result).CurrentValues.SetValues(Fshift);
+                db.SaveChanges();
+            }
+            else
+            {
+                new Exception("There is no such record to modify");
+            }
         }
     }
 }
