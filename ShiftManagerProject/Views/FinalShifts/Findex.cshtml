@@ -13,6 +13,9 @@
 <br /><br />
 <h2>Next Week's Shifts - @NextWeek</h2>
 <br /><br />
+@Html.ActionLink("Redo", "DeleteFshifts", "FinalShifts", new { @class = "btn btn-secondary" })
+<br /><br />
+
 <div class='table-responsive'>
     <table id="tablePreview" class="table table-hover table-bordered" style="width:100%">
         <tr class="table-active">
@@ -36,23 +39,23 @@
                 {
                     if (Mshift.OfDayType == j && Mshift.Morning.HasValue)
                     {
-                            if (Mshift.Name.IsEmpty())
-                            {
-                                <td>
-                                    @Html.ActionLink("Update", "Edit", new { id = Mshift.ID }, new { @class = "badge badge-danger" })
-                                </td>
-                            }
-                            else
-                            {
-                                <td>
-                                    @Html.ActionLink(Mshift.Name, "Edit", new { id = Mshift.ID })
-                                </td>
+                        if (Mshift.Name.IsEmpty())
+                        {
+                            <td>
+                                @Html.ActionLink("Update", "Edit", new { id = Mshift.ID }, new { @class = "badge badge-danger" })
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @Html.ActionLink(Mshift.Name, "Edit", new { id = Mshift.ID })
+                            </td>
                         }
                         j += 4;
                     }
                 }
             </tr>
-            j=1;
+            j = 1;
             <tr>
                 <td></td>
                 @foreach (var Mshift in Model)
@@ -76,7 +79,7 @@
                 }
             </tr>
         }
-        
+
         @foreach (var items in Model.Take(1))
         {
             j = 2;
@@ -106,7 +109,7 @@
                 }
             </tr>
         }
-        
+
         @foreach (var items in Model.Take(1))
         {
             j = 3;
@@ -151,7 +154,7 @@
     }
 }
 <script>
-     window.onload = function () {
+    window.onload = function () {
         if (!window.location.hash) {
             window.location = window.location + '#loaded';
             window.location.reload(true);

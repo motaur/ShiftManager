@@ -9,7 +9,7 @@
 <h2>Admin - List</h2>
 <br /><br />
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-<div class="class="d-flex p-8 bg-secondary text-white"">
+<div class="class=" d-flex p-8 bg-secondary text-white"">
     <table id="tablePreview" class="table table-hover table-bordered table-responsive" style="text-align: center;">
         @{
             List<string> DayOfWeek = new List<string>(new string[] { "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" });
@@ -17,7 +17,7 @@
                 @foreach (var item in DayOfWeek)
                 {
                     <th class="table-active" colspan="3">
-                            @Html.DisplayFor(x => item)
+                        @Html.DisplayFor(x => item)
                     </th>
                 }
             </tr>
@@ -104,7 +104,7 @@
                     @Html.DisplayFor(modelItem => item.ID)
                 </td>
                 <td>
-                    @Html.ActionLink(item.Name, "Edit", "ShiftPrefs", new { id = item.ID } , new { @title = item.Message })
+                    @Html.ActionLink(item.Name, "Edit", "ShiftPrefs", new { id = item.ID }, new { @title = item.Message })
                 </td>
                 <td>
                     @Html.ActionLink(Convert.ToString(item.NoOfShifts), "Edit", "ShiftPrefs", new { id = item.ID }, null)
@@ -245,6 +245,10 @@
     {
         <p>
             @Html.ActionLink("Close Week", "Close", "FinalShifts", new { @class = "btn btn-outline-info" })
+        </p>
+        <br /><br />
+        <p>
+            @Html.ActionLink("New Close", "NewClose", "FinalShifts", new { @class = "btn btn-outline-info" })
         </p>
     }
     else

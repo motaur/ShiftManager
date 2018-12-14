@@ -21,7 +21,7 @@
             </div>
             <div class="collapse navbar-collapse" id="navbarColor03">
                 <ul class="navbar-nav mr-auto">
-                    <li class="nav-item">@Html.ActionLink("Home", "Index", "Home")</li>
+                    @*<li class="nav-item">@Html.ActionLink("Home", "Index", "Home")</li>*@
 
                     <li class="nav-item">
                         @if (System.Web.HttpContext.Current.Session["admin"] != null)
@@ -41,7 +41,7 @@
                         {
                             if ((bool)System.Web.HttpContext.Current.Session["admin"] == true)
                             {
-                                @Html.ActionLink("EShifts", "Index", "FinalShifts")
+                                @Html.ActionLink("EShifts", "Findex", "FinalShifts")
                             }
                             else
                             {
@@ -67,8 +67,17 @@
                         {
                             if ((bool)System.Web.HttpContext.Current.Session["admin"] == true)
                             {
-                                @Html.ActionLink("Employees", "Index", "Employees")
-                            } 
+                                @Html.ActionLink("Fixed", "Fixed", "FinalShifts")
+                            }
+                        }
+                    </li>
+                    <li class="nav-item">
+                        @if (System.Web.HttpContext.Current.Session["admin"] != null)
+                        {
+                            if ((bool)System.Web.HttpContext.Current.Session["admin"] == true)
+                            {
+                                @Html.ActionLink("Employees", "Index", "Employees")     
+                            }
                         }
                     </li>
                 </ul>

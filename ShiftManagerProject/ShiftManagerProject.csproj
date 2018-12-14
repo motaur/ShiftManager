@@ -261,6 +261,10 @@
     <Compile Include="Migrations\201812060901312_dayof.Designer.cs">
       <DependentUpon>201812060901312_dayof.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201812090151341_newrowinDB.cs" />
+    <Compile Include="Migrations\201812090151341_newrowinDB.Designer.cs">
+      <DependentUpon>201812090151341_newrowinDB.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ShiftManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -433,6 +437,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201812060901312_dayof.resx">
       <DependentUpon>201812060901312_dayof.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201812090151341_newrowinDB.resx">
+      <DependentUpon>201812090151341_newrowinDB.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

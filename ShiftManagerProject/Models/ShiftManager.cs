@@ -194,5 +194,7 @@ namespace ShiftManagerProject.Models
         [Required]
         [DisplayName("Night")]
         public Nullable<bool> Night { get; set; }
+
+        public int OfDayType { get; set; }
     }
 }

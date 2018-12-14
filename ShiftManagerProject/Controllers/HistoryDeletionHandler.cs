@@ -15,7 +15,7 @@ namespace ShiftManagerProject.Controllers
         public void PrevWeeksDeletion()
         {
             var count = db.PrevWeeks.ToList();
-            if (count.Count() > 56)
+            if (count.Count() >= 56)
             {
                 foreach (var shift in db.PrevWeeks.Take(28))
                 {
@@ -27,7 +27,7 @@ namespace ShiftManagerProject.Controllers
                 }
                 catch
                 {
-                    throw new ArgumentException("Couldn't delete Previous Week History");
+                    throw new ArgumentException("Unable to delete Previous Week History");
                 }
             }
         }
@@ -47,9 +47,27 @@ namespace ShiftManagerProject.Controllers
                 }
                 catch
                 {
-                    throw new ArgumentException("Couldn't delete Final Shift History");
+                    throw new ArgumentException("Unable to delete Final Shift History");
                 }
             }
+        }
+
+        public void SpecialFixedFshiftDeletion()
+        {
+            var countF = db.FinalShift.ToList();
+        
+                foreach (var shift in countF)
+                {
+                    db.FinalShift.Remove(shift);
+                }
+                try
+                {
+                    db.SaveChanges();
+                }
+                catch
+                {
+                    throw new ArgumentException("Unable to delete Final Shift History");
+                }
         }
 
         public void PreferenceDeletion()
@@ -64,7 +82,7 @@ namespace ShiftManagerProject.Controllers
             }
             catch
             {
-                throw new ArgumentException("Couldn't delete Preference History");
+                throw new ArgumentException("Unable to delete Preference History");
             }
         }
     }

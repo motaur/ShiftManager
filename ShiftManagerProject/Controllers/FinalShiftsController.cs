@@ -72,7 +72,10 @@ namespace ShiftManagerProject.Controllers
 
         public ActionResult FClose()
         {
+            FSrespo.PrevShiftsRotation();
+            HsDelete.PrevWeeksDeletion();
             HsDelete.FshiftDeletion();
+
             List<string> FirstLetter = new List<string>(new string[] { "M", "A", "N" });
             List<FinalShift> FShift = new List<FinalShift>();
             int i = 1, j = 0, flag = 0, x, MornChecker = 0, DoubleChecker = 0, y=0;
@@ -181,19 +184,32 @@ namespace ShiftManagerProject.Controllers
                 ad = 1;
             }
             ViewBag.admin = ad;
-
-            var nextshifts = db.FinalShift.OrderByDescending(x => x.ID).Take(28).OrderBy(x => x.ID);
+            FSrespo.CheckOrderOfDayType();
+            //var nextshifts = db.FinalShift.OrderByDescending(x => x.ID).Take(28).OrderBy(x => x.ID);
+            var nextshifts = db.FinalShift.OrderByDescending(x => x.OfDayType).OrderBy(x => x.OfDayType).ToList();
             return View(nextshifts);
         }
 
         public ActionResult FShiftsForEmployees()
         {
-            var nextshifts = db.FinalShift.OrderByDescending(x => x.ID).Take(28).OrderBy(x => x.ID);
+            var nextshifts = db.FinalShift.OrderByDescending(x => x.OfDayType).OrderBy(x => x.OfDayType).ToList();
             return View(nextshifts);
+        }
+
+        public ActionResult NewClose()
+        {
+            FSrespo.PrevShiftsRotation();
+            HsDelete.PrevWeeksDeletion();
+            HsDelete.FshiftDeletion();
+
+            FSrespo.LeastShiftPref();
+            FSrespo.CheckOrderOfDayType();
+            return RedirectToAction("Index");
         }
 
         public ActionResult Close()
         {
+            HsDelete.FshiftDeletion();
             List<string> FirstLetter = new List<string>(new string[] { "M", "A", "N" });
             List<FinalShift> FShift = new List<FinalShift>();
             int i = 1, j = 0, flag = 0, x, MornChecker = 0, DoubleChecker = 0;
@@ -401,15 +417,22 @@ namespace ShiftManagerProject.Controllers
         public ActionResult Send()
         {
             HsDelete.PreferenceDeletion();
-            return RedirectToAction("DeleteNSend");
+            return RedirectToAction("Index");
+            //return RedirectToAction("DeleteNSend");
         }
 
-        public ActionResult DeleteNSend()
+        public ActionResult DeleteFshifts()
         {
-            FSrespo.PrevShiftsRotation();
-            HsDelete.PrevWeeksDeletion();
-            return RedirectToAction("Index");
+            HsDelete.SpecialFixedFshiftDeletion();
+            return RedirectToAction("Fixed");
         }
+
+        //public ActionResult DeleteNSend()
+        //{
+        //    FSrespo.PrevShiftsRotation();
+        //    HsDelete.PrevWeeksDeletion();
+        //    return RedirectToAction("Index");
+        //}
 
         public ActionResult Edit(long? id)
         {

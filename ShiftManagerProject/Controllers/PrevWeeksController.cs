@@ -30,7 +30,8 @@ namespace ShiftManagerProject.Controllers
             }
             ViewBag.records = rec;
 
-            return View(db.PrevWeeks.ToList());
+            var nextshifts = db.PrevWeeks.OrderByDescending(x => x.OfDayType).OrderBy(x => x.OfDayType).ToList();
+            return View(nextshifts);
         }
 
         public ActionResult LastWeek()

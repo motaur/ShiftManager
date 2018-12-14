@@ -18,6 +18,7 @@ namespace ShiftManagerProject.Controllers
         static Random rnd = new Random();
         static int DaySerial = 0;
 
+
         public FinalShift CheckPref(int x, string y)
         {
             List<Employees> Workers = new List<Employees>();
@@ -540,6 +541,7 @@ namespace ShiftManagerProject.Controllers
         public void SavingToDB(FinalShift BeforeChecking)
         {
             BeforeChecking.OfDayType = DaySerial++;
+            DaySerial = DaySerial > 27 ? 0 : DaySerial;
             db.FinalShift.Add(BeforeChecking);
             db.SaveChanges();
         }
@@ -560,6 +562,8 @@ namespace ShiftManagerProject.Controllers
                 pweek.Day = Fshift.Day;
                 pweek.EmployID = Fshift.EmployID;
                 pweek.Name = Fshift.Name;
+                pweek.OfDayType = Fshift.OfDayType;
+
                 if (Fshift.Morning == null)
                 {
                     pweek.Morning = false;
@@ -592,7 +596,7 @@ namespace ShiftManagerProject.Controllers
         public bool FutureShifts(int x, string y, Employees employee)
         {
             string dayofweek = DayOfWeek(x);
-            string Fdayofweek = x!=7 ? DayOfWeek(x + 1): DayOfWeek(x);
+            string Fdayofweek = x != 7 ? DayOfWeek(x + 1) : DayOfWeek(x);
             int flag = 0;
             if (y == "M")
             {
@@ -612,7 +616,7 @@ namespace ShiftManagerProject.Controllers
 
             if (y == "A")
             {
-                if(x!=7)
+                if (x != 7)
                 {
                     var futureShifts = db.FinalShift.Where(k => (k.Day == dayofweek && k.Night == true) || (k.Day == Fdayofweek && k.Morning == true));
 
@@ -636,7 +640,7 @@ namespace ShiftManagerProject.Controllers
                         }
                     }
                 }
-               
+
                 if (flag != 0)
                 {
                     return true;
@@ -704,7 +708,7 @@ namespace ShiftManagerProject.Controllers
 
             if (y == "A")
             {
-                if(x==1)
+                if (x == 1)
                 {
                     var LastDay = db.PrevWeeks.OrderByDescending(p => p.ID).Take(1);
                     foreach (var lastday in LastDay)
@@ -737,7 +741,7 @@ namespace ShiftManagerProject.Controllers
                         }
                     }
                 }
-              
+
                 if (flag != 0)
                 {
                     return true;
@@ -746,7 +750,7 @@ namespace ShiftManagerProject.Controllers
 
             if (y == "N")
             {
-                if(x==1)
+                if (x == 1)
                 {
                     var PrevShifts = db.FinalShift.Where(k => (k.Day == dayofweek && (k.Morning == true || k.Afternoon == true)) || (k.Day == lastdayofweek && k.Night == true));
 
@@ -770,7 +774,7 @@ namespace ShiftManagerProject.Controllers
                         }
                     }
                 }
-              
+
                 if (flag != 0)
                 {
                     return true;
@@ -895,7 +899,7 @@ namespace ShiftManagerProject.Controllers
             var EmployShifts = db.FinalShift.Where(k => k.EmployID == ID);
             ShiftPref pref = db.ShiftPref.SingleOrDefault(ShiftPref => ShiftPref.EmployID == ID);
 
-            if(EmployShifts.Count() < pref.NoOfShifts)
+            if (EmployShifts.Count() < pref.NoOfShifts)
             {
                 return true;
             }
@@ -944,7 +948,7 @@ namespace ShiftManagerProject.Controllers
                 }
             }
 
-      Redo: if (Workers.Any())
+            Redo: if (Workers.Any())
             {
                 r = rnd.Next(Workers.Count);
                 Fshift = new FinalShift
@@ -996,19 +1000,196 @@ namespace ShiftManagerProject.Controllers
 
         }
 
-        public void AssignDayType (FinalShift Fshift)
+        public void AssignDayType(FinalShift Fshift)
         {
             var result = db.FinalShift.SingleOrDefault(b => b.ID == Fshift.ID);
+            Fshift.OfDayType = DaySerial++;
+            DaySerial = DaySerial > 27 ? 0 : DaySerial;
 
             if (result != null)
             {
-                Fshift.OfDayType = DaySerial++;
                 db.Entry(result).CurrentValues.SetValues(Fshift);
                 db.SaveChanges();
             }
             else
             {
                 new Exception("There is no such record to modify");
+            }
+        }
+
+        public void LeastShiftPref()
+        {
+            ShiftPref prefshifts = new ShiftPref();
+            List<Employees> employees = db.Employees.ToList();
+
+            var val = false;
+            FinalShift NewFinalS = new FinalShift();
+            List<string> FirstLetter = new List<string>(new string[] { "M", "A", "N" });
+            int[] counter = new int[3];
+            int i, j = 0, max = 0;
+
+            for (i = 1; i < 8; i++)
+            {
+                foreach (var employ in employees)
+                {
+                    prefshifts = db.ShiftPref.SingleOrDefault(ShiftPref => ShiftPref.EmployID == employ.ID);
+                    if (prefshifts == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (var shifts in prefshifts.GetType().GetProperties())
+                    {
+                        if (shifts.Name.EndsWith(Convert.ToString(i)))
+                        {
+                            val = (Boolean)shifts.GetValue(prefshifts);
+                            if (Exist(i, shifts.Name.Substring(0, 1)))
+                            { continue; }
+
+                            switch (shifts.Name.Substring(0, 1))
+                            {
+                                case "M":
+                                    if (!val)
+                                    {
+                                        counter[0] += 1;
+                                    }
+                                    break;
+                                case "A":
+                                    if (!val)
+                                    {
+                                        counter[1] += 1;
+                                    }
+                                    break;
+                                case "N":
+                                    if (!val)
+                                    {
+                                        counter[2] += 1;
+                                    }
+                                    break;
+                            }
+                        }
+                    }
+                }
+
+                max = counter.ToList().IndexOf(counter.Max());
+                if (counter.Max() > 0)
+                {
+                    NewFinalS = NewCheckerP(i, FirstLetter[max]);
+                    if (NewFinalS == null)
+                    {
+                        NewFinalS = new FinalShift
+                        {
+                            EmployID = 0,
+                            Name = null,
+                            Day = DayOfWeek(i)
+                        };
+                        switch (FirstLetter[max])
+                        {
+                            case "M":
+                                NewFinalS.Morning = true;
+                                break;
+                            case "A":
+                                NewFinalS.Afternoon = true;
+                                break;
+                            case "N":
+                                NewFinalS.Night = true;
+                                break;
+                        }
+                    }
+                    SavingToDB(NewFinalS);
+                    counter[0] = counter[1] = counter[2] = 0;
+                }
+                j++;
+
+                i = j + 1 < 28 ? i : 9;
+                i = i + 1 == 8 ? 0 : i;
+
+                //if (!(j + 1 < 28))
+                //{
+                //    i = 9;
+                //}
+
+                //if (i + 1 == 8)
+                //{
+                //    i = 0;
+                //}
+            }
+        }
+
+        public int OrderOfDayTypeHandler()
+        {
+            int[][] mat = new int[4][];
+            for (int i=0; i<4; i++)
+            {
+                for(int j=0; j<7 && i==0; j++)
+                {
+                    mat[i][j] = j;
+                }
+
+                for(int j=0;j<7 && i!=0;j+=4)
+                {
+                    mat[i][j] = j;
+                }
+            }
+            return 0; 
+        }
+
+        public void CheckOrderOfDayType()
+        {
+            var List = db.FinalShift.ToList();
+
+            for (int i = 1, j = 0, x = 0, flag = 0; i < 8; i++)
+            {
+                foreach (var shifts in List)
+                {
+                    if (shifts.Day == DayOfWeek(i))
+                    {
+                        var result = db.FinalShift.SingleOrDefault(b => b.ID == shifts.ID);
+
+                        if (shifts.Morning == true)
+                        {
+                            shifts.OfDayType = j++;
+                            flag++;
+                            db.Entry(result).CurrentValues.SetValues(shifts);
+                            //db.SaveChanges();
+                        }
+
+                        if (flag == 2)
+                        {
+                            foreach (var shift in List)
+                            {
+                                if (shift.Day == DayOfWeek(i))
+                                {
+                                    result = db.FinalShift.SingleOrDefault(b => b.ID == shift.ID);
+
+                                    if (shift.Afternoon == true && flag == 2)
+                                    {
+                                        shift.OfDayType = j++;
+                                        flag++;
+                                        db.Entry(result).CurrentValues.SetValues(shift);
+                                        //db.SaveChanges();
+                                    }
+
+                                    if (shift.Night == true && flag == 3)
+                                    {
+                                        shift.OfDayType = j++;
+                                        flag = 0;
+                                        db.Entry(result).CurrentValues.SetValues(shift);
+                                        //db.SaveChanges();
+                                    }
+                                }
+                            }
+                        }
+                        db.SaveChanges();
+                    }
+                }
+                if (j - x >= 4)
+                {
+                    x = j;
+                    if (x >= 27)
+                    { break; }
+                    continue;
+                }
             }
         }
     }

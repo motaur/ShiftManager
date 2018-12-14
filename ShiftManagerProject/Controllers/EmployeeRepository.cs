@@ -25,10 +25,11 @@ namespace ShiftManagerProject.Controllers
                 }
                 catch
                 {
-                    throw new ArgumentException("Wrong Credentials");
+                    return null;
                 }
             }
         }
+
         public bool UserCounter(Employees NewUser)
         {
             var users = db.Employees.Where(u => u.Email == NewUser.Email);
