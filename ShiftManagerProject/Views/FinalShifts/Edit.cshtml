@@ -23,75 +23,76 @@
 {
     @Html.AntiForgeryToken()
 
-    <div class="form-horizontal">
-        <hr />
-        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.ID)
+<div class="form-horizontal">
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.ID)
+    @Html.HiddenFor(model => model.OfDayType)
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.DropDownListFor(model => model.Name, listofNames, "-- Select Shift --")
-                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.Name, listofNames, "-- Select Shift --")
+            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
         </div>
+    </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Day, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Day, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Day, "", new { @class = "text-danger" })
-            </div>
+    <div class="form-group">
+        @Html.LabelFor(model => model.Day, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.Day, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.Day, "", new { @class = "text-danger" })
         </div>
-        <br />
-        <div class="form-group">
-            @Html.LabelFor(model => model.Morning, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @if (Model.Morning.HasValue)
-                    {
-                        <mark> @Html.DisplayTextFor(Model => Model.Morning) </mark>
-                    }
-                    @Html.HiddenFor(model => model.Morning)
-                    @Html.ValidationMessageFor(model => model.Morning, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-        <br />
-        <div class="form-group">
-            @Html.LabelFor(model => model.Afternoon, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @if (Model.Afternoon.HasValue)
-                    {
-                        <mark> @Html.DisplayTextFor(Model => Model.Afternoon) </mark>
-                    }
-                    @Html.HiddenFor(model => model.Afternoon)
-                    @Html.ValidationMessageFor(model => model.Afternoon, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-        <br />
-        <div class="form-group">
-            @Html.LabelFor(model => model.Night, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <div class="checkbox">
-                    @if (Model.Night.HasValue)
-                    {
-                        <mark> @Html.DisplayTextFor(Model => Model.Night) </mark>
-                    }
-                    @Html.HiddenFor(model => model.Night)
-                    @Html.ValidationMessageFor(model => model.Night, "", new { @class = "text-danger" })
-                </div>
-            </div>
-        </div>
-        <br />
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
+    </div>
+    <br />
+    <div class="form-group">
+        @Html.LabelFor(model => model.Morning, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @if (Model.Morning.HasValue)
+                {
+                    <mark> @Html.DisplayTextFor(Model => Model.Morning) </mark>
+                }
+                @Html.HiddenFor(model => model.Morning)
+                @Html.ValidationMessageFor(model => model.Morning, "", new { @class = "text-danger" })
             </div>
         </div>
     </div>
+    <br />
+    <div class="form-group">
+        @Html.LabelFor(model => model.Afternoon, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @if (Model.Afternoon.HasValue)
+                {
+                    <mark> @Html.DisplayTextFor(Model => Model.Afternoon) </mark>
+                }
+                @Html.HiddenFor(model => model.Afternoon)
+                @Html.ValidationMessageFor(model => model.Afternoon, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="form-group">
+        @Html.LabelFor(model => model.Night, htmlAttributes: new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            <div class="checkbox">
+                @if (Model.Night.HasValue)
+                {
+                    <mark> @Html.DisplayTextFor(Model => Model.Night) </mark>
+                }
+                @Html.HiddenFor(model => model.Night)
+                @Html.ValidationMessageFor(model => model.Night, "", new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <br />
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Save" class="btn btn-default" />
+        </div>
+    </div>
+</div>
 }
 
 <div>

@@ -17,6 +17,49 @@ namespace ShiftManagerProject.Controllers
         private ShiftManagerContext db = new ShiftManagerContext();
         static Random rnd = new Random();
         static int DaySerial = 0;
+        static int[,] Mat = new int[5,7];
+
+        public int OfDayHandler(bool whattodo, int d, int s)
+        {
+            int num = 0;
+            if(whattodo)
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    for (int j = 0, x = 1; x < 8 && i == 0; j++, x++)
+                    {
+                        Mat[i,j] = x;
+                    }
+
+                    for (int j = 0, x = i-1; j < 7 && i != 0; j++, x += 4)
+                    {
+                        Mat[i,j] = x;
+                    }
+                }
+            }
+            else
+            {
+                if(s==0)
+                {
+                    num = Mat[s + 1, d - 1] != 99 ? Mat[s + 1, d - 1] : Mat[s + 2, d - 1];
+                    if (Mat[s + 1, d - 1] == num)
+                    {
+                        Mat[s + 1, d - 1] = 99;
+                    }
+                    else
+                    {
+                        Mat[s + 2, d - 1] = 99;
+                    }
+                }
+                else
+                {
+                    num = Mat[s + 1, d - 1];
+                    Mat[s + 1, d - 1] = 99;
+                }
+            }
+          
+            return num;
+        }
 
 
         public FinalShift CheckPref(int x, string y)
@@ -309,196 +352,196 @@ namespace ShiftManagerProject.Controllers
             }
         }
 
-        public void ReviewAndPlace(List<int> NoOfShifts, List<FinalShift> FShift, List<int> NightFlag)
-        {
-            int y = 0;
-            var fshifts = (db.FinalShift.OrderByDescending(k => k.ID).Take(28).OrderBy(k => k.ID)).ToList();
-            FinalShift LastMorn = new FinalShift();
+        //public void ReviewAndPlace(List<int> NoOfShifts, List<FinalShift> FShift, List<int> NightFlag)
+        //{
+        //    int y = 0;
+        //    var fshifts = (db.FinalShift.OrderByDescending(k => k.ID).Take(28).OrderBy(k => k.ID)).ToList();
+        //    FinalShift LastMorn = new FinalShift();
 
-            for (int i = 0, j = 0, flag = 0; i < ListOfEmployees().Count; i++)
-            {
-                ShiftPref employ = new ShiftPref
-                {
-                    EmployID = ListOfEmployees()[i]
-                };
-                ShiftPref pref = db.ShiftPref.SingleOrDefault(ShiftPref => ShiftPref.EmployID == employ.EmployID);
-                if (pref == null)
-                {
-                    continue;
-                }
+        //    for (int i = 0, j = 0, flag = 0; i < ListOfEmployees().Count; i++)
+        //    {
+        //        ShiftPref employ = new ShiftPref
+        //        {
+        //            EmployID = ListOfEmployees()[i]
+        //        };
+        //        ShiftPref pref = db.ShiftPref.SingleOrDefault(ShiftPref => ShiftPref.EmployID == employ.EmployID);
+        //        if (pref == null)
+        //        {
+        //            continue;
+        //        }
 
-                if (NoOfShifts[i] < pref.NoOfShifts)
-                {
-                    j = 0;
-                    flag = 0;
-                    foreach (var shift in fshifts)
-                    {
-                        if (j++ % 4 == 0)
-                        {
-                            flag++;
-                        }
-                        if (shift.Morning == true && shift.EmployID != 0)
-                        {
-                            LastMorn = shift;
-                        }
-                        if (shift.EmployID == 0)
-                        {
-                            y = 0;
-                            FinalShift BeforeChecking = new FinalShift();
-                            if (shift.Morning == true)
-                            {
-                                recheck: BeforeChecking = (CheckPref(flag, "M"));
-                                if (BeforeChecking.EmployID != ListOfEmployees()[i])
-                                {
-                                    y++;
-                                    if (y <= 2)
-                                    {
-                                        goto recheck;
-                                    }
-                                    continue;
-                                }
-                                else
-                                {
-                                    foreach (var Dshift in FShift)
-                                    {
-                                        if (shift.Day == Dshift.Day)
-                                        {
-                                            if (Dshift.EmployID == BeforeChecking.EmployID)
-                                            {
-                                                y = 2;
-                                                break;
-                                            }
-                                        }
-                                        else if (DayOfWeek(flag - 1) == Dshift.Day && Dshift.Night == true)
-                                        {
-                                            if (Dshift.EmployID == BeforeChecking.EmployID)
-                                            {
-                                                y = 2;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    if (y == 2)
-                                    {
-                                        continue;
-                                    }
-                                }
-                                if (LastMorn.Day == shift.Day && BeforeChecking.EmployID == LastMorn.EmployID)
-                                {
-                                    goto recheck;
-                                }
-                            }
-                            else if (shift.Afternoon == true)
-                            {
-                                recheck: BeforeChecking = (CheckPref(flag, "A"));
-                                if (BeforeChecking.EmployID != ListOfEmployees()[i])
-                                {
-                                    y++;
-                                    if (y <= 2)
-                                    {
-                                        goto recheck;
-                                    }
-                                    continue;
-                                }
-                                else
-                                {
-                                    if (AfternoonChecker(ListOfEmployees()[i]))
-                                    {
-                                        continue;
-                                    }
+        //        if (NoOfShifts[i] < pref.NoOfShifts)
+        //        {
+        //            j = 0;
+        //            flag = 0;
+        //            foreach (var shift in fshifts)
+        //            {
+        //                if (j++ % 4 == 0)
+        //                {
+        //                    flag++;
+        //                }
+        //                if (shift.Morning == true && shift.EmployID != 0)
+        //                {
+        //                    LastMorn = shift;
+        //                }
+        //                if (shift.EmployID == 0)
+        //                {
+        //                    y = 0;
+        //                    FinalShift BeforeChecking = new FinalShift();
+        //                    if (shift.Morning == true)
+        //                    {
+        //                        recheck: BeforeChecking = (CheckPref(flag, "M"));
+        //                        if (BeforeChecking.EmployID != ListOfEmployees()[i])
+        //                        {
+        //                            y++;
+        //                            if (y <= 2)
+        //                            {
+        //                                goto recheck;
+        //                            }
+        //                            continue;
+        //                        }
+        //                        else
+        //                        {
+        //                            foreach (var Dshift in FShift)
+        //                            {
+        //                                if (shift.Day == Dshift.Day)
+        //                                {
+        //                                    if (Dshift.EmployID == BeforeChecking.EmployID)
+        //                                    {
+        //                                        y = 2;
+        //                                        break;
+        //                                    }
+        //                                }
+        //                                else if (DayOfWeek(flag - 1) == Dshift.Day && Dshift.Night == true)
+        //                                {
+        //                                    if (Dshift.EmployID == BeforeChecking.EmployID)
+        //                                    {
+        //                                        y = 2;
+        //                                        break;
+        //                                    }
+        //                                }
+        //                            }
+        //                            if (y == 2)
+        //                            {
+        //                                continue;
+        //                            }
+        //                        }
+        //                        if (LastMorn.Day == shift.Day && BeforeChecking.EmployID == LastMorn.EmployID)
+        //                        {
+        //                            goto recheck;
+        //                        }
+        //                    }
+        //                    else if (shift.Afternoon == true)
+        //                    {
+        //                        recheck: BeforeChecking = (CheckPref(flag, "A"));
+        //                        if (BeforeChecking.EmployID != ListOfEmployees()[i])
+        //                        {
+        //                            y++;
+        //                            if (y <= 2)
+        //                            {
+        //                                goto recheck;
+        //                            }
+        //                            continue;
+        //                        }
+        //                        else
+        //                        {
+        //                            if (AfternoonChecker(ListOfEmployees()[i]))
+        //                            {
+        //                                continue;
+        //                            }
 
-                                    foreach (var Dshift in FShift)
-                                    {
-                                        if (shift.Day == Dshift.Day && Dshift.Afternoon != true)
-                                        {
-                                            if (Dshift.EmployID == BeforeChecking.EmployID)
-                                            {
-                                                y = 2;
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    if (y == 2)
-                                    {
-                                        continue;
-                                    }
-                                }
-                            }
-                            else
-                            {
-                                recheck: BeforeChecking = (CheckPref(flag, "N"));
-                                if (BeforeChecking.EmployID != ListOfEmployees()[i])
-                                {
-                                    y++;
-                                    if (y <= 2)
-                                    {
-                                        goto recheck;
-                                    }
-                                    continue;
-                                }
-                                else
-                                {
-                                    if (NightFlag[i] >= 2)
-                                    {
-                                        continue;
-                                    }
-                                    NightFlag[i] += 1;
+        //                            foreach (var Dshift in FShift)
+        //                            {
+        //                                if (shift.Day == Dshift.Day && Dshift.Afternoon != true)
+        //                                {
+        //                                    if (Dshift.EmployID == BeforeChecking.EmployID)
+        //                                    {
+        //                                        y = 2;
+        //                                        break;
+        //                                    }
+        //                                }
+        //                            }
+        //                            if (y == 2)
+        //                            {
+        //                                continue;
+        //                            }
+        //                        }
+        //                    }
+        //                    else
+        //                    {
+        //                        recheck: BeforeChecking = (CheckPref(flag, "N"));
+        //                        if (BeforeChecking.EmployID != ListOfEmployees()[i])
+        //                        {
+        //                            y++;
+        //                            if (y <= 2)
+        //                            {
+        //                                goto recheck;
+        //                            }
+        //                            continue;
+        //                        }
+        //                        else
+        //                        {
+        //                            if (NightFlag[i] >= 2)
+        //                            {
+        //                                continue;
+        //                            }
+        //                            NightFlag[i] += 1;
 
-                                    foreach (var Dshift in FShift)
-                                    {
-                                        if (shift.Day == Dshift.Day && Dshift.Night != true)
-                                        {
-                                            if (Dshift.EmployID == BeforeChecking.EmployID)
-                                            {
-                                                y = 2;
-                                                break;
-                                            }
-                                        }
-                                        else if (flag != 7 && DayOfWeek(flag + 1) == Dshift.Day && Dshift.Morning == true)
-                                        {
-                                            if (Dshift.EmployID == BeforeChecking.EmployID)
-                                            {
-                                                y = 2;
-                                                break;
-                                            }
-                                        }
-                                        if (Dshift.EmployID == BeforeChecking.EmployID && Dshift.Night == true)
-                                        {
-                                            y++;
-                                        }
-                                    }
-                                    if (y >= 2)
-                                    {
+        //                            foreach (var Dshift in FShift)
+        //                            {
+        //                                if (shift.Day == Dshift.Day && Dshift.Night != true)
+        //                                {
+        //                                    if (Dshift.EmployID == BeforeChecking.EmployID)
+        //                                    {
+        //                                        y = 2;
+        //                                        break;
+        //                                    }
+        //                                }
+        //                                else if (flag != 7 && DayOfWeek(flag + 1) == Dshift.Day && Dshift.Morning == true)
+        //                                {
+        //                                    if (Dshift.EmployID == BeforeChecking.EmployID)
+        //                                    {
+        //                                        y = 2;
+        //                                        break;
+        //                                    }
+        //                                }
+        //                                if (Dshift.EmployID == BeforeChecking.EmployID && Dshift.Night == true)
+        //                                {
+        //                                    y++;
+        //                                }
+        //                            }
+        //                            if (y >= 2)
+        //                            {
 
-                                        continue;
-                                    }
-                                }
-                            }
+        //                                continue;
+        //                            }
+        //                        }
+        //                    }
 
-                            if (BeforeChecking.EmployID != 0)
-                            {
-                                if (BeforeChecking.Morning == true)
-                                {
-                                    LastMorn = BeforeChecking;
-                                }
-                                BeforeChecking.ID = shift.ID;
-                                NoOfShifts[i] += 1;
-                                FShift.Add(BeforeChecking);
-                                var result = db.FinalShift.SingleOrDefault(b => b.ID == shift.ID);
+        //                    if (BeforeChecking.EmployID != 0)
+        //                    {
+        //                        if (BeforeChecking.Morning == true)
+        //                        {
+        //                            LastMorn = BeforeChecking;
+        //                        }
+        //                        BeforeChecking.ID = shift.ID;
+        //                        NoOfShifts[i] += 1;
+        //                        FShift.Add(BeforeChecking);
+        //                        var result = db.FinalShift.SingleOrDefault(b => b.ID == shift.ID);
 
-                                if (result != null)
-                                {
-                                    db.Entry(result).CurrentValues.SetValues(BeforeChecking);
-                                    db.SaveChanges();
-                                }
-                            }
+        //                        if (result != null)
+        //                        {
+        //                            db.Entry(result).CurrentValues.SetValues(BeforeChecking);
+        //                            db.SaveChanges();
+        //                        }
+        //                    }
 
-                        }
-                    }
+        //                }
+        //            }
 
-                }
-            }
-        }
+        //        }
+        //    }
+        //}
 
         public void NightChecker()
         {
@@ -875,22 +918,19 @@ namespace ShiftManagerProject.Controllers
         }
         public bool HasTwoNights(long ID, int x)
         {
-            if (x > 2)
-            {
                 int a = 0;
-                var PrevShift = db.FinalShift.Where(k => k.Night == true).OrderByDescending(p => p.ID).Take(x - 1);
+                var PrevShift = db.FinalShift.Where(k => k.Night == true).OrderByDescending(p => p.OfDayType);
                 foreach (var NightShift in PrevShift)
                 {
                     if (ID == NightShift.EmployID)
                     {
                         a++;
                     }
-                    if (a == 2)
+                    if (a == 1)
                     {
                         return true;
                     }
                 }
-            }
             return false;
         }
 
@@ -1024,9 +1064,11 @@ namespace ShiftManagerProject.Controllers
 
             var val = false;
             FinalShift NewFinalS = new FinalShift();
-            List<string> FirstLetter = new List<string>(new string[] { "M", "A", "N" });
-            int[] counter = new int[3];
-            int i, j = 0, max = 0;
+            List<string> FirstLetter = new List<string>(new string[] { "M", "M", "A", "N" });
+            int[] counter = new int[4], TrueCounter = new int[4];
+            int i, j = 0, max = 0, TrueMax=0;
+
+            OfDayHandler(true, 0, 0);
 
             for (i = 1; i < 8; i++)
             {
@@ -1039,31 +1081,44 @@ namespace ShiftManagerProject.Controllers
                     }
 
                     foreach (var shifts in prefshifts.GetType().GetProperties())
-                    {
+                    {            
                         if (shifts.Name.EndsWith(Convert.ToString(i)))
                         {
-                            val = (Boolean)shifts.GetValue(prefshifts);
-                            if (Exist(i, shifts.Name.Substring(0, 1)))
+                            if (NewExistForNewCheckerP(i, shifts.Name.Substring(0, 1)))
                             { continue; }
 
+                            val = (Boolean)shifts.GetValue(prefshifts);
+                        
                             switch (shifts.Name.Substring(0, 1))
                             {
                                 case "M":
                                     if (!val)
                                     {
-                                        counter[0] += 1;
+                                        counter[0] += 1;   
+                                    }
+                                    else
+                                    {
+                                        TrueCounter[0] += 1;
                                     }
                                     break;
                                 case "A":
                                     if (!val)
                                     {
-                                        counter[1] += 1;
+                                        counter[2] += 1;
+                                    }
+                                    else
+                                    {
+                                        TrueCounter[2] += 1;
                                     }
                                     break;
                                 case "N":
                                     if (!val)
                                     {
-                                        counter[2] += 1;
+                                        counter[3] += 1;
+                                    }
+                                    else
+                                    {
+                                        TrueCounter[3] += 1;
                                     }
                                     break;
                             }
@@ -1072,6 +1127,8 @@ namespace ShiftManagerProject.Controllers
                 }
 
                 max = counter.ToList().IndexOf(counter.Max());
+                TrueMax = TrueCounter.ToList().IndexOf(TrueCounter.Max());
+
                 if (counter.Max() > 0)
                 {
                     NewFinalS = NewCheckerP(i, FirstLetter[max]);
@@ -1096,101 +1153,97 @@ namespace ShiftManagerProject.Controllers
                                 break;
                         }
                     }
-                    SavingToDB(NewFinalS);
-                    counter[0] = counter[1] = counter[2] = 0;
+                    NewFinalS.OfDayType = OrderOfDayTypeHandler(i, max);
                 }
+                else if (TrueCounter.Max() > 0 && counter.Max() == 0)
+                {
+                    NewFinalS = NewCheckerP(i, FirstLetter[TrueMax]);
+                    if (NewFinalS == null)
+                    {
+                        NewFinalS = new FinalShift
+                        {
+                            EmployID = 0,
+                            Name = null,
+                            Day = DayOfWeek(i)
+                        };
+                        switch (FirstLetter[TrueMax])
+                        {
+                            case "M":
+                                NewFinalS.Morning = true;
+                                break;
+                            case "A":
+                                NewFinalS.Afternoon = true;
+                                break;
+                            case "N":
+                                NewFinalS.Night = true;
+                                break;
+                        }
+                    }
+                    NewFinalS.OfDayType = OrderOfDayTypeHandler(i, TrueMax);
+                }           
+
+                    db.FinalShift.Add(NewFinalS);
+                    db.SaveChanges();
+                
+                    counter[0] = counter[1] = counter[2] = counter[3]= 0;
+                    TrueCounter[0] = TrueCounter[1] = TrueCounter[2] = TrueCounter[3] = 0;
+                
                 j++;
 
-                i = j + 1 < 28 ? i : 9;
+                i = j + 1 < 29 ? i : 9; 
                 i = i + 1 == 8 ? 0 : i;
-
-                //if (!(j + 1 < 28))
-                //{
-                //    i = 9;
-                //}
-
-                //if (i + 1 == 8)
-                //{
-                //    i = 0;
-                //}
+             
             }
         }
 
-        public int OrderOfDayTypeHandler()
+        public int OrderOfDayTypeHandler(int d, int s)
         {
-            int[][] mat = new int[4][];
-            for (int i=0; i<4; i++)
-            {
-                for(int j=0; j<7 && i==0; j++)
-                {
-                    mat[i][j] = j;
-                }
-
-                for(int j=0;j<7 && i!=0;j+=4)
-                {
-                    mat[i][j] = j;
-                }
-            }
-            return 0; 
+            return OfDayHandler(false,d,s);
         }
 
-        public void CheckOrderOfDayType()
+        public bool NewExistForNewCheckerP(int x, string y)
         {
-            var List = db.FinalShift.ToList();
-
-            for (int i = 1, j = 0, x = 0, flag = 0; i < 8; i++)
+            int flag = 0;
+            string dayofweek = DayOfWeek(x);
+            List<FinalShift> futureShifts = db.FinalShift.Where(k => k.Day == dayofweek).ToList();
+            if (futureShifts.Any())
             {
-                foreach (var shifts in List)
+                switch (y)
                 {
-                    if (shifts.Day == DayOfWeek(i))
-                    {
-                        var result = db.FinalShift.SingleOrDefault(b => b.ID == shifts.ID);
-
-                        if (shifts.Morning == true)
+                    case "M":
+                        foreach (var shift in futureShifts)
                         {
-                            shifts.OfDayType = j++;
-                            flag++;
-                            db.Entry(result).CurrentValues.SetValues(shifts);
-                            //db.SaveChanges();
-                        }
-
-                        if (flag == 2)
-                        {
-                            foreach (var shift in List)
+                            if (shift.Morning == true)
                             {
-                                if (shift.Day == DayOfWeek(i))
-                                {
-                                    result = db.FinalShift.SingleOrDefault(b => b.ID == shift.ID);
-
-                                    if (shift.Afternoon == true && flag == 2)
-                                    {
-                                        shift.OfDayType = j++;
-                                        flag++;
-                                        db.Entry(result).CurrentValues.SetValues(shift);
-                                        //db.SaveChanges();
-                                    }
-
-                                    if (shift.Night == true && flag == 3)
-                                    {
-                                        shift.OfDayType = j++;
-                                        flag = 0;
-                                        db.Entry(result).CurrentValues.SetValues(shift);
-                                        //db.SaveChanges();
-                                    }
-                                }
+                                flag++;
                             }
                         }
-                        db.SaveChanges();
-                    }
-                }
-                if (j - x >= 4)
-                {
-                    x = j;
-                    if (x >= 27)
-                    { break; }
-                    continue;
+                        if (flag == 2)
+                        {
+                            return true;
+                        }
+                        break;
+                    case "A":
+                        foreach (var shift in futureShifts)
+                        {
+                            if (shift.Afternoon == true)
+                            {
+                                return true;
+                            }
+                        }
+                        break;
+                    case "N":
+                        foreach (var shift in futureShifts)
+                        {
+                            if (shift.Night == true)
+                            {
+                                return true;
+                            }
+                        }
+                        break;
                 }
             }
+            return false;
         }
     }
 }

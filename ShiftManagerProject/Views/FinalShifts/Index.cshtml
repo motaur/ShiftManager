@@ -3,7 +3,7 @@
 @{
     ViewBag.Title = "This Week's Shifts";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    int i = 0;
+    int j = 0;
 
     DateTime nextSunday = DateTime.Now.AddDays(1);
     while (nextSunday.DayOfWeek != DayOfWeek.Sunday)
@@ -13,8 +13,10 @@
 <br /><br />
 <h2>Next Week's Shifts - @NextWeek</h2>
 <br /><br />
+@Html.ActionLink("Redo", "DeleteFshifts", "FinalShifts", new { @class = "btn btn-secondary" })
+<br /><br />
 <div class='table-responsive'>
-    <table id="tablePreview" class="table table-hover table-bordered" style="width:100%">
+    <table id="tablePreview" class="table table-hover table-bordered" style="width:100%;text-align:center;">
         <tr class="table-active">
             <th>
             </th>
@@ -32,58 +34,59 @@
                 <td class="table-info">
                     @Html.DisplayNameFor(model => model.Morning)
                 </td>
-                @foreach (var Mshift in Model)
+                @foreach (var Mshift in Model.Where(x => x.Morning == true).OrderBy(m => m.OfDayType))
                 {
 
-                    if (Mshift.Morning.HasValue)
+                    if (Mshift.OfDayType == j)
                     {
-                        if (i++ % 2 == 0)
+
+                        j += 4;
+                        if (Mshift.Name.IsEmpty())
                         {
-                            if (Mshift.Name.IsEmpty())
-                            {
-                                <td>
-                                    @Html.ActionLink("Update", "Edit", new { id = Mshift.ID }, new { @class = "badge badge-danger" })
-                                </td>
-                            }
-                            else
-                            {
-                                <td>
-                                    @Html.ActionLink(Mshift.Name, "Edit", new { id = Mshift.ID })
-                                </td>
-                            }
+                            <td>
+                                @Html.ActionLink("Update", "Edit", new { id = Mshift.ID }, new { @class = "badge badge-danger" })
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @Html.ActionLink(Mshift.Name, "Edit", new { id = Mshift.ID })
+                            </td>
                         }
 
                     }
                 }
             </tr>
-            i = 0;
+
+            j = 1;
             <tr>
                 <td></td>
-                @foreach (var Mshift in Model)
+                @foreach (var Mshift in Model.Where(x => x.Morning == true).OrderBy(m => m.OfDayType))
                 {
 
-                    if (Mshift.Morning.HasValue)
+                    if (Mshift.OfDayType == j)
                     {
-                        if (i++ % 2 != 0)
+
+                        j += 4;
+                        if (Mshift.Name.IsEmpty())
                         {
-                            if (Mshift.Name.IsEmpty())
-                            {
-                                <td>
-                                    @Html.ActionLink("Update", "Edit", new { id = Mshift.ID }, new { @class = "badge badge-danger" })
-                                </td>
-                            }
-                            else
-                            {
-                                <td>
-                                    @Html.ActionLink(Mshift.Name, "Edit", new { id = Mshift.ID })
-                                </td>
-                            }
+                            <td>
+                                @Html.ActionLink("Update", "Edit", new { id = Mshift.ID }, new { @class = "badge badge-danger" })
+                            </td>
                         }
+                        else
+                        {
+                            <td>
+                                @Html.ActionLink(Mshift.Name, "Edit", new { id = Mshift.ID })
+                            </td>
+                        }
+
 
                     }
                 }
             </tr>
         }
+        @{ j = 2;}
         @foreach (var items in Model.Take(1))
         {
             <tr>
@@ -91,11 +94,12 @@
                     @Html.DisplayNameFor(model => model.Afternoon)
                 </td>
 
-                @foreach (var Ashift in Model)
+                @foreach (var Ashift in Model.Where(x => x.Afternoon == true).OrderBy(m => m.OfDayType))
                 {
 
-                    if (Ashift.Afternoon.HasValue)
+                    if (Ashift.OfDayType == j)
                     {
+                        j += 4;
                         if (Ashift.Name.IsEmpty())
                         {
                             <td>
@@ -113,6 +117,7 @@
                 }
             </tr>
         }
+        @{ j = 3;}
 
         @foreach (var items in Model.Take(1))
         {
@@ -120,11 +125,12 @@
                 <td class="table-warning">
                     @Html.DisplayNameFor(model => model.Night)
                 </td>
-                @foreach (var Nshift in Model)
+                @foreach (var Nshift in Model.Where(x => x.Night == true).OrderBy(m => m.OfDayType))
                 {
 
-                    if (Nshift.Night.HasValue)
+                    if (Nshift.OfDayType == j)
                     {
+                        j += 4;
                         if (Nshift.Name.IsEmpty())
                         {
                             <td>
@@ -157,7 +163,7 @@
     }
 }
 <script>
-     window.onload = function () {
+    window.onload = function () {
         if (!window.location.hash) {
             window.location = window.location + '#loaded';
             window.location.reload(true);
