@@ -44,6 +44,7 @@ namespace ShiftManagerProject.Controllers
         public ActionResult Fixed(FinalShift FixedShift)
         {
             bool flag = false;
+            FinalShift EmployShift = db.FinalShift.
             Employees Emp = db.Employees.FirstOrDefault(x => x.FirstName == FixedShift.Name);
             try
             {
@@ -51,7 +52,7 @@ namespace ShiftManagerProject.Controllers
                 {
                     FixedShift.EmployID = Emp.ID;
                     flag = true;
-                    FixedShift.OfDayType = 0;
+                    FixedShift.OfDayType = FSrespo.OrderOfDayTypeHandler;
                     db.FinalShift.Add(FixedShift);
                     db.SaveChanges();
                     return RedirectToAction("Fixed");
@@ -78,7 +79,7 @@ namespace ShiftManagerProject.Controllers
 
             List<string> FirstLetter = new List<string>(new string[] { "M", "A", "N" });
             List<FinalShift> FShift = new List<FinalShift>();
-            int i = 1, j = 0, flag = 0, x, MornChecker = 0, DoubleChecker = 0, y=0;
+            int i = 1, x;
             string NameofShift = null;
             ShiftPref Stype = new ShiftPref();
             List<int> NightFlag = new List<int>(new int[FSrespo.ListOfEmployees().Count]);

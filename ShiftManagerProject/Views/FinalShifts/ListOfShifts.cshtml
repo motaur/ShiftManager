@@ -8,8 +8,9 @@
 <br /><br />
 <h2>Admin - List</h2>
 <br /><br />
+
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
-<div class="class=" d-flex p-8 bg-secondary text-white"">
+<div class="d-flex p-8 bg-secondary text-white">
     <table id="tablePreview" class="table table-hover table-bordered table-responsive" style="text-align: center;">
         @{
             List<string> DayOfWeek = new List<string>(new string[] { "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" });
@@ -24,10 +25,10 @@
         }
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.ID)
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                @Html.DisplayNameFor(model => model.ID)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.NoOfShifts)
@@ -101,10 +102,10 @@
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ID)
+                    @Html.ActionLink(item.Name, "Edit", "ShiftPrefs", new { id = item.ID }, new { @title = item.Message }) 
                 </td>
                 <td>
-                    @Html.ActionLink(item.Name, "Edit", "ShiftPrefs", new { id = item.ID }, new { @title = item.Message })
+                    @Html.DisplayFor(modelItem => item.ID)
                 </td>
                 <td>
                     @Html.ActionLink(Convert.ToString(item.NoOfShifts), "Edit", "ShiftPrefs", new { id = item.ID }, null)

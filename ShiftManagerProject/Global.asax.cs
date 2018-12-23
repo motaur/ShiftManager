@@ -1,5 +1,7 @@
-﻿using System;
+﻿using ShiftManagerProject.DAL;
+using System;
 using System.Collections.Generic;
+using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -12,7 +14,7 @@ namespace ShiftManagerProject
     {
         public MvcApplication()
         {
-            
+            //Database.SetInitializer(new CreateDatabaseIfNotExists<ShiftManagerContext>());
         }
         protected void Application_Start()
         {

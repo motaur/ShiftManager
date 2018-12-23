@@ -1085,7 +1085,7 @@ namespace ShiftManagerProject.Controllers
                         if (shifts.Name.EndsWith(Convert.ToString(i)))
                         {
                             if (NewExistForNewCheckerP(i, shifts.Name.Substring(0, 1)))
-                            { continue; }
+                            {  continue; }
 
                             val = (Boolean)shifts.GetValue(prefshifts);
                         
