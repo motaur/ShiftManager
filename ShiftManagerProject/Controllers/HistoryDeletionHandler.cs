@@ -54,8 +54,11 @@ namespace ShiftManagerProject.Controllers
 
         public void SpecialFixedFshiftDeletion()
         {
-            var countF = db.FinalShift.ToList();
-        
+
+            if (db.FinalShift.Count() >= 28)
+            {
+                var countF = db.FinalShift.Take(28).ToList();
+
                 foreach (var shift in countF)
                 {
                     db.FinalShift.Remove(shift);
@@ -68,6 +71,7 @@ namespace ShiftManagerProject.Controllers
                 {
                     throw new ArgumentException("Unable to delete Final Shift History");
                 }
+            }
         }
 
         public void PreferenceDeletion()

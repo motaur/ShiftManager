@@ -244,12 +244,8 @@
 @{
     if (@ViewBag.closed != 0)
     {
-        @*<p>
-            @Html.ActionLink("Close Week", "Close", "FinalShifts", new { @class = "btn btn-outline-info" })
-        </p>
-        <br /><br />*@
         <p>
-            @Html.ActionLink("Close", "NewClose", "FinalShifts", new { @class = "btn btn-outline-info" })
+            @Html.ActionLink("Officially Close Week", "NewClose", "FinalShifts", new { @class = "btn btn-outline-info" })
         </p>
     }
     else

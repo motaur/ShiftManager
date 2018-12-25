@@ -23,7 +23,7 @@ namespace ShiftManagerProject.Controllers
         {
             int rec = 0;
             var count = db.PrevWeeks.ToList();
-            if (count.Count()>56)
+            if (count.Count()>=56)
             {
                 rec++;
                 HsDelete.PrevWeeksDeletion();
