@@ -89,10 +89,10 @@
                         {
                             <strong>Howdy @Html.Encode(Session["UserSess"]) !</strong>
                         }
-                        else
+                        @*else
                         {
                             @Html.ActionLink("Employees", "Index", "Employees")
-                        }
+                        }*@
                     </li>
                     <li class="nav-item">
                         @if (System.Web.HttpContext.Current.Session["UserSess"] != null)

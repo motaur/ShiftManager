@@ -32,6 +32,7 @@ namespace ShiftManagerProject.Controllers
 
         public ActionResult Fixed()
         {
+            HsDelete.FshiftDeletion();
             FinalShift finalShift = new FinalShift
             {
                 Employees = db.Employees.ToList()
@@ -44,15 +45,20 @@ namespace ShiftManagerProject.Controllers
         public ActionResult Fixed(FinalShift FixedShift)
         {
             bool flag = false;
-            FinalShift EmployShift = db.FinalShift.
+            int i,y;
             Employees Emp = db.Employees.FirstOrDefault(x => x.FirstName == FixedShift.Name);
+            for (i = 1; FSrespo.DayOfWeek(i) != FixedShift.Day; i++) ;
+            y = FixedShift.Morning == true ? 0 : FixedShift.Afternoon == true ? 2 : 3;
+
+            if (!db.FinalShift.Any()) { FSrespo.OfDayHandler(true, 0, 0);}
+
             try
             {
                 if (Emp != null && ModelState.IsValid)
                 {
                     FixedShift.EmployID = Emp.ID;
                     flag = true;
-                    FixedShift.OfDayType = FSrespo.OrderOfDayTypeHandler;
+                    FixedShift.OfDayType = FSrespo.OrderOfDayTypeHandler(i,y);
                     db.FinalShift.Add(FixedShift);
                     db.SaveChanges();
                     return RedirectToAction("Fixed");
@@ -186,199 +192,11 @@ namespace ShiftManagerProject.Controllers
         {
             FSrespo.PrevShiftsRotation();
             HsDelete.PrevWeeksDeletion();
-            HsDelete.FshiftDeletion();
+            HsDelete.SpecialFixedFshiftDeletion();
 
             FSrespo.LeastShiftPref();
             return RedirectToAction("Index");
         }
-
-        //public ActionResult Close()
-        //{
-        //    HsDelete.FshiftDeletion();
-        //    List<string> FirstLetter = new List<string>(new string[] { "M", "A", "N" });
-        //    List<FinalShift> FShift = new List<FinalShift>();
-        //    int i = 1, j = 0, flag = 0, x, MornChecker = 0, DoubleChecker = 0;
-        //    string NameofShift = null;
-        //    ShiftPref Stype = new ShiftPref();
-        //    List<int> NightFlag = new List<int>(new int[FSrespo.ListOfEmployees().Count]);
-        //    List<int> NoOfShifts = new List<int>(new int[FSrespo.ListOfEmployees().Count]);
-
-        //    foreach (var prop in Stype.GetType().GetProperties())
-        //    {
-        //        if (prop.PropertyType == typeof(Nullable<bool>))
-        //        {
-        //            NameofShift = prop.Name;
-        //            for (i = 1; i < Convert.ToInt16(NameofShift.Substring(NameofShift.Length - 1, 1)); i++) ;
-        //            foreach (var Letter in FirstLetter)
-        //            {
-        //                if (Letter == "M" && prop.Name.Substring(0, 1) == Letter)
-        //                {
-        //                    for (x = 0; x < 2; x++)
-        //                    {
-        //                        MornChecker = 0;
-        //                        FinalShift BeforeChecking = new FinalShift();
-        //                        Recheck: BeforeChecking = (FSrespo.CheckPref(i, Letter));
-
-        //                        if (MornChecker == 3)
-        //                        {
-        //                            FSrespo.MorningReset(BeforeChecking, i);
-        //                            continue;
-        //                        }
-
-        //                        if (x == 1)
-        //                        {
-        //                            if (FShift[FShift.Count - 1].EmployID == BeforeChecking.EmployID)
-        //                            {
-        //                                MornChecker++;
-        //                                goto Recheck;
-        //                            }
-        //                        }
-
-        //                        for (j = 0; j < FSrespo.ListOfEmployees().Count; j++)
-        //                        {
-        //                            if (BeforeChecking.EmployID == FSrespo.ListOfEmployees()[j])
-        //                            {
-        //                                NoOfShifts[j] += 1;
-
-        //                                ShiftPref pref = db.ShiftPref.Single(ShiftPref => ShiftPref.EmployID == BeforeChecking.EmployID);
-        //                                if (NoOfShifts[j] > pref.NoOfShifts)
-        //                                {
-        //                                    NoOfShifts[j] -= 1;
-        //                                    MornChecker++;
-        //                                    goto Recheck;
-        //                                }
-        //                                FShift.Add(BeforeChecking);
-        //                                FSrespo.SavingToDB(BeforeChecking);
-        //                                break;
-        //                            }
-        //                            else if (BeforeChecking.EmployID == 0)
-        //                            {
-        //                                FShift.Add(BeforeChecking);
-        //                                FSrespo.SavingToDB(BeforeChecking);
-        //                                break;
-        //                            }
-        //                        }
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    if (prop.Name.Substring(0, 1) == Letter)
-        //                    {
-
-        //                        FinalShift BeforeChecking = new FinalShift();
-        //                        BeforeChecking = (FSrespo.CheckPref(i, Letter));
-
-        //                        DoubleChecker = 0;
-        //                        flag = 0;
-
-        //                        Checker1: for (j = 0; j < FSrespo.ListOfEmployees().Count; j++)
-        //                        {
-        //                            if (BeforeChecking.EmployID == FSrespo.ListOfEmployees()[j])
-        //                            {
-        //                                if (DoubleChecker == 5)
-        //                                {
-        //                                    BeforeChecking = FSrespo.ResetFeilds(BeforeChecking);
-        //                                    goto Double;
-        //                                }
-
-        //                                NoOfShifts[j] += 1;
-        //                                ShiftPref pref = db.ShiftPref.Single(ShiftPref => ShiftPref.EmployID == BeforeChecking.EmployID);
-
-        //                                if (NoOfShifts[j] > pref.NoOfShifts)
-        //                                {
-        //                                    NoOfShifts[j] -= 1;
-        //                                    DoubleChecker++;
-        //                                    BeforeChecking = (FSrespo.CheckPref(i, Letter));
-        //                                    goto Checker1;
-        //                                }
-
-        //                                if (BeforeChecking.Night == true)
-        //                                {
-        //                                    if (NightFlag[j] >= 2)
-        //                                    {
-        //                                        NoOfShifts[j] -= 1;
-        //                                        //NightFlag[j] -= 1;
-        //                                        //BeforeChecking = FSrespo.ResetFeilds(BeforeChecking);
-        //                                        BeforeChecking = (FSrespo.CheckPref(i, Letter));
-        //                                        DoubleChecker++;
-        //                                        goto Checker1;
-        //                                    }
-        //                                    /*                 NCheck:*/
-        //                                    foreach (var Nshift in FShift)
-        //                                    {
-        //                                        if (flag == 3)
-        //                                        {
-        //                                            if (NightFlag[j] >= 2)
-        //                                            {
-        //                                                NoOfShifts[j] -= 1;
-        //                                                //NightFlag[j] -= 1;
-        //                                                BeforeChecking = FSrespo.ResetFeilds(BeforeChecking);
-        //                                                goto Double;
-        //                                            }
-        //                                            NightFlag[j] += 1;
-        //                                            goto Finalize;
-        //                                        }
-
-        //                                        if (Nshift.Night == true)
-        //                                        {
-        //                                            if (FSrespo.ListOfEmployees()[j] == Nshift.EmployID && Nshift.Night == true)
-        //                                            {
-        //                                                BeforeChecking = (FSrespo.CheckPref(i, Letter));
-        //                                                if (BeforeChecking.EmployID == FSrespo.ListOfEmployees()[j])
-        //                                                {
-        //                                                    BeforeChecking = FSrespo.CheckPref(i, Letter);
-        //                                                    if (BeforeChecking.EmployID != FSrespo.ListOfEmployees()[j])
-        //                                                    {
-        //                                                        flag++;
-        //                                                        NoOfShifts[j] -= 1;
-        //                                                        goto Checker1;
-        //                                                    }
-        //                                                    else
-        //                                                    {
-        //                                                        flag = 3;
-        //                                                    }
-        //                                                }
-        //                                                else
-        //                                                {
-        //                                                    flag++;
-        //                                                    NoOfShifts[j] -= 1;
-        //                                                    goto Checker1;
-        //                                                }
-        //                                            }
-        //                                        }
-        //                                        //if (NightFlag[j] >= 2)
-        //                                        //{
-        //                                        //    flag = 3;
-        //                                        //    goto NCheck;
-        //                                        //}
-        //                                        //NightFlag[j] += 1;
-        //                                    }
-        //                                }
-
-        //                                Finalize: FShift.Add(BeforeChecking);
-        //                                FSrespo.SavingToDB(BeforeChecking);
-        //                                break;
-        //                            }
-
-        //                            Double: if (BeforeChecking.EmployID == 0)
-        //                            {
-        //                                FShift.Add(BeforeChecking);
-        //                                FSrespo.SavingToDB(BeforeChecking);
-        //                                break;
-        //                            }
-        //                        }
-        //                    }
-        //                }
-
-        //            }
-        //        }
-        //    }
-
-        //    FSrespo.ReviewAndPlace(NoOfShifts, FShift, NightFlag);
-        //    FSrespo.NightChecker();
-
-        //    return RedirectToAction("Index");
-        //}
 
         public ActionResult Create()
         {

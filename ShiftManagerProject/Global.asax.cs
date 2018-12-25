@@ -14,7 +14,7 @@ namespace ShiftManagerProject
     {
         public MvcApplication()
         {
-            //Database.SetInitializer(new CreateDatabaseIfNotExists<ShiftManagerContext>());
+            Database.SetInitializer(new CreateDatabaseIfNotExists<ShiftManagerContext>());
         }
         protected void Application_Start()
         {

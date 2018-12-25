@@ -35,7 +35,7 @@ namespace ShiftManagerProject.Controllers
         public void FshiftDeletion()
         {
             var countF = db.FinalShift.ToList();
-            if (countF.Count() >= 28)
+            if (countF.Count() >= 56)
             {
                 foreach (var shift in db.FinalShift.Take(28))
                 {

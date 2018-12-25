@@ -11,13 +11,7 @@ namespace ShiftManagerProject.DAL
     {
         protected override void Seed(ShiftManagerContext context)
         {
-            var Manager = new List<Employees>
-            {
-            new Employees{ID=12345678,FirstName="Maurice",LastName="Saadon",Email="Maurice.s@lsports.eu",Pass="123456",Admin=true},
-            };
-
-            Manager.ForEach(s => context.Employees.Add(s));
-            context.SaveChanges();
+           
         }
     }
 }

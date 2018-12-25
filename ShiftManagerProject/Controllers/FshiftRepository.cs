@@ -67,10 +67,11 @@ namespace ShiftManagerProject.Controllers
             List<Employees> Workers = new List<Employees>();
             var LastDay = db.PrevWeeks.OrderByDescending(p => p.ID).Take(2);
             var PrevShift = db.FinalShift.OrderByDescending(p => p.ID).Take(2);
+            var Employees = db.Employees.ToList();
             var flag = 0;
             string shiftofday = null;
 
-            foreach (var employ in db.Employees)
+            foreach (var employ in Employees)
             {
                 var a = 0;
                 flag = 0;
@@ -207,7 +208,7 @@ namespace ShiftManagerProject.Controllers
 
             if (!Workers.Any())
             {
-                foreach (var employ in db.Employees)
+                foreach (var employ in Employees)
                 {
                     ShiftPref prefshift = new ShiftPref();
                     prefshift = db.ShiftPref.SingleOrDefault(ShiftPref => ShiftPref.EmployID == employ.ID);
@@ -950,11 +951,12 @@ namespace ShiftManagerProject.Controllers
         {
 
             List<Employees> Workers = new List<Employees>();
+            var Employees = db.Employees.ToList();
             int flag = 0;
             FinalShift Fshift = new FinalShift();
             int r;
 
-            foreach (var employ in db.Employees)
+            foreach (var employ in Employees)
             {
                 string shiftofday = null;
                 ShiftPref pref = db.ShiftPref.SingleOrDefault(ShiftPref => ShiftPref.EmployID == employ.ID);

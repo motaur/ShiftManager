@@ -19,6 +19,7 @@
         ID = item.ID;
         name = item.Name;
     }
+    var sh = Model.ToList();
 }
 
 <p>
@@ -50,7 +51,7 @@
                 <td class="table-info">
                     @Html.DisplayNameFor(model => model.Morning1)
                 </td>
-                @foreach (var shift in Model)
+                @foreach (var shift in sh)
                 {
                     foreach (var prop in shift.GetType().GetProperties())
                     {
@@ -91,7 +92,7 @@
                 <td class="table-info">
                     @Html.DisplayNameFor(model => model.Afternoon1)
                 </td>
-                @foreach (var shift in Model)
+                @foreach (var shift in sh)
                 {
                     foreach (var prop in shift.GetType().GetProperties())
                     {
@@ -130,7 +131,7 @@
                 <td class="table-info">
                     @Html.DisplayNameFor(model => model.Night1)
                 </td>
-                @foreach (var shift in Model)
+                @foreach (var shift in sh)
                 {
                     foreach (var prop in shift.GetType().GetProperties())
                     {
