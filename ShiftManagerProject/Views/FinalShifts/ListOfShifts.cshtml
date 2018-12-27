@@ -24,11 +24,8 @@
             </tr>
         }
         <tr>
-            <th>
+            <th colspan="2">
                 @Html.DisplayNameFor(model => model.Name)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ID)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.NoOfShifts)
@@ -101,14 +98,11 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td>
+                <td colspan="2">
                     @Html.ActionLink(item.Name, "Edit", "ShiftPrefs", new { id = item.ID }, new { @title = item.Message }) 
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.ID)
-                </td>
-                <td>
-                    @Html.ActionLink(Convert.ToString(item.NoOfShifts), "Edit", "ShiftPrefs", new { id = item.ID }, null)
+                    @Html.ActionLink(Convert.ToString(item.NoOfShifts), "Edit", "ShiftPrefs", new { id = item.ID })
                 </td>
                 <td>
                     @if (item.Morning1 == true)

@@ -172,10 +172,14 @@ namespace ShiftManagerProject.Controllers
         public ActionResult Index()
         {
             int ad = 0;
-            if (!db.ShiftPref.Any())
+
+            var pweeks = db.PrevWeeks.Select(k=>k.EmployID).ToList();
+            var fweeks = db.FinalShift.Select(k => k.EmployID).ToList();
+            if(pweeks.SequenceEqual(fweeks))
             {
                 ad = 1;
             }
+
             ViewBag.admin = ad;
 
             var nextshifts = db.FinalShift.OrderByDescending(x => x.OfDayType).OrderBy(x => x.OfDayType).ToList();
@@ -219,7 +223,7 @@ namespace ShiftManagerProject.Controllers
         public ActionResult Send()
         {
             FSrespo.PrevShiftsRotation();
-            HsDelete.PreferenceDeletion();
+            HsDelete.PrevWeeksDeletion();
             return RedirectToAction("Index");
         }
 

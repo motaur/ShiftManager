@@ -18,8 +18,7 @@ namespace ShiftManagerProject.Controllers
         static Random rnd = new Random();
         static int DaySerial = 0;
 
-        static int[,] Mat = new int[5, 7];
-        
+        static readonly int[,] Mat = new int[5, 7];
 
         public int OfDayHandler(bool whattodo, int d, int s)
         {

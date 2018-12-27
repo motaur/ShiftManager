@@ -74,20 +74,20 @@ namespace ShiftManagerProject.Controllers
             }
         }
 
-        public void PreferenceDeletion()
-        {
-            foreach (var shift in db.ShiftPref)
-            {
-                db.ShiftPref.Remove(shift);
-            }
-            try
-            {
-                db.SaveChanges();
-            }
-            catch
-            {
-                throw new ArgumentException("Unable to delete Preference History");
-            }
-        }
+        //public void PreferenceDeletion()
+        //{
+        //    foreach (var shift in db.ShiftPref)
+        //    {
+        //        db.ShiftPref.Remove(shift);
+        //    }
+        //    try
+        //    {
+        //        db.SaveChanges();
+        //    }
+        //    catch
+        //    {
+        //        throw new ArgumentException("Unable to delete Preference History");
+        //    }
+        //}
     }
 }
