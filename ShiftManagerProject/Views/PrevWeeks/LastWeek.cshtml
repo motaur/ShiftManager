@@ -4,7 +4,7 @@
     ViewBag.Title = "LastWeek";
     Layout = "~/Views/Shared/_Layout.cshtml";
     int i = 0;
-    DateTime lastSunday = DateTime.Now.AddDays(-1);
+    DateTime lastSunday = DateTime.Now;
     while (lastSunday.DayOfWeek != DayOfWeek.Sunday)
     { lastSunday = lastSunday.AddDays(-1); }
     var lastSundays = Convert.ToDateTime(lastSunday).ToString("dd/MM/yyyy");

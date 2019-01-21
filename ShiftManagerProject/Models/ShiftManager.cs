@@ -169,6 +169,9 @@ namespace ShiftManagerProject.Models
 
         public int OfDayType { get; set; }
 
+        [Required]
+        public DateTime Dates { get; set; }
+
         public IEnumerable<Employees> Employees { get; set; }
     }
 
@@ -196,5 +199,8 @@ namespace ShiftManagerProject.Models
         public Nullable<bool> Night { get; set; }
 
         public int OfDayType { get; set; }
+
+        [Required]
+        public DateTime Dates { get; set; }
     }
 }

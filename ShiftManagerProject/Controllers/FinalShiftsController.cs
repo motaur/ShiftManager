@@ -45,12 +45,27 @@ namespace ShiftManagerProject.Controllers
         public ActionResult Fixed(FinalShift FixedShift)
         {
             bool flag = false;
-            int i,y;
+            int i, y;
             Employees Emp = db.Employees.FirstOrDefault(x => x.FirstName == FixedShift.Name);
             for (i = 1; FSrespo.DayOfWeek(i) != FixedShift.Day; i++) ;
             y = FixedShift.Morning == true ? 0 : FixedShift.Afternoon == true ? 2 : 3;
 
-            if (db.FinalShift.Count()==28 || db.FinalShift.Count()==0) { FSrespo.OfDayHandler(true, 0, 0);}
+            DayOfWeek day = new System.DayOfWeek();
+            string dday = FSrespo.DayOfWeek(i);
+
+            for (int d = 0; d < 7; d++)
+            {
+                if (day.ToString() != dday)
+                {
+                    day = (DayOfWeek)((d + 1) % 7);
+                }
+                else { break; }
+            }
+
+            FixedShift.Dates = FSrespo.NextWeeksDates(day);
+
+            if (db.FinalShift.Count() == 28 || db.FinalShift.Count() 
+                == 0) { FSrespo.OfDayHandler(true, 0, 0); }
 
             try
             {
@@ -58,7 +73,7 @@ namespace ShiftManagerProject.Controllers
                 {
                     FixedShift.EmployID = Emp.ID;
                     flag = true;
-                    FixedShift.OfDayType = FSrespo.OrderOfDayTypeHandler(i,y);
+                    FixedShift.OfDayType = FSrespo.OrderOfDayTypeHandler(i, y);
                     db.FinalShift.Add(FixedShift);
                     db.SaveChanges();
                     return RedirectToAction("Fixed");
@@ -69,120 +84,52 @@ namespace ShiftManagerProject.Controllers
                 if (flag)
                 {
                     ModelState.AddModelError("Name", "Error Saving this shift");
+                    FixedShift.Employees = db.Employees.ToList();
                     return View(FixedShift);
                 }
                 ModelState.AddModelError("Name", "Employee's ID was not found or matched");
+                FixedShift.Employees = db.Employees.ToList();
                 return View(FixedShift);
             }
             return View(FixedShift);
         }
 
-        //public ActionResult FClose()
-        //{
-        //    FSrespo.PrevShiftsRotation();
-        //    HsDelete.PrevWeeksDeletion();
-        //    HsDelete.FshiftDeletion();
-
-        //    List<string> FirstLetter = new List<string>(new string[] { "M", "A", "N" });
-        //    List<FinalShift> FShift = new List<FinalShift>();
-        //    int i = 1, x;
-        //    string NameofShift = null;
-        //    ShiftPref Stype = new ShiftPref();
-        //    List<int> NightFlag = new List<int>(new int[FSrespo.ListOfEmployees().Count]);
-        //    List<int> NoOfShifts = new List<int>(new int[FSrespo.ListOfEmployees().Count]);
-
-        //    foreach (var prop in Stype.GetType().GetProperties())
-        //    {
-        //        if (prop.PropertyType == typeof(Nullable<bool>))
-        //        {
-        //            NameofShift = prop.Name;
-        //            for (i = 1; i < Convert.ToInt16(NameofShift.Substring(NameofShift.Length - 1, 1)); i++) ;
-        //            foreach (var Letter in FirstLetter)
-        //            {
-        //                if (Letter == "M" && prop.Name.Substring(0, 1) == Letter)
-        //                {
-        //                    if (FSrespo.Exist(i, Letter))
-        //                    {
-        //                        continue;
-        //                    }
-
-        //                    for (x = 0; x < 2; x++)
-        //                    {
-        //                        if (x == 0 && FSrespo.OneMornExist(i, Letter))
-        //                        {
-        //                            continue;
-        //                        }
-
-        //                        FinalShift BeforeChecking = (FSrespo.NewCheckerP(i, Letter));
-
-        //                        if (BeforeChecking != null)
-        //                        {
-        //                            FSrespo.SavingToDB(BeforeChecking);
-        //                            continue;
-        //                        }
-        //                        else
-        //                        {
-        //                            BeforeChecking = new FinalShift();
-        //                            FSrespo.MorningReset(BeforeChecking, i);
-        //                            continue;
-        //                        }
-        //                    }
-        //                }
-        //                else if (Letter != "M" && prop.Name.Substring(0, 1) == Letter)
-        //                {
-        //                    if (FSrespo.Exist(i, Letter))
-        //                    {
-        //                        continue;
-        //                    }
-
-        //                    FinalShift BeforeChecking = (FSrespo.NewCheckerP(i, Letter));
-
-        //                    if (BeforeChecking != null)
-        //                    {
-        //                        FSrespo.SavingToDB(BeforeChecking);
-        //                        continue;
-        //                    }
-        //                    else
-        //                    {
-        //                        BeforeChecking = new FinalShift
-        //                        {
-        //                            Day = FSrespo.DayOfWeek(i)
-        //                        };
-        //                        BeforeChecking = FSrespo.ResetFeilds(BeforeChecking);
-        //                        switch (Letter)
-        //                        {
-        //                            case "A":
-        //                                BeforeChecking.Afternoon = true;
-        //                                break;
-        //                            case "N":
-        //                                BeforeChecking.Night = true;
-        //                                break;
-        //                        }
-        //                        FSrespo.SavingToDB(BeforeChecking);
-        //                        continue;
-        //                    }
-
-        //                }
-        //            }
-        //        }
-        //    }
-        //    return RedirectToAction("Index");
-        //}
-
         public ActionResult Index()
         {
-            int ad = 0;
+            int ad = 0, i = 0;
+            string y;
+            List<string> EmpList = new List<string>();
+            List<string> DayList = new List<string>();
+            List<string> ShiftList = new List<string>();
 
-            var pweeks = db.PrevWeeks.Select(k=>k.EmployID).ToList();
-            var fweeks = db.FinalShift.Select(k => k.EmployID).ToList();
-            if(pweeks.SequenceEqual(fweeks))
+            var pweeks = db.PrevWeeks.OrderByDescending(x => x.ID).Take(28).OrderBy(w => w.OfDayType).Select(k => k.EmployID).ToList();
+            var fweeks = db.FinalShift.OrderBy(q => q.OfDayType).Select(k => k.EmployID).ToList();
+            if (pweeks.SequenceEqual(fweeks))
             {
                 ad = 1;
             }
 
             ViewBag.admin = ad;
-
             var nextshifts = db.FinalShift.OrderByDescending(x => x.OfDayType).OrderBy(x => x.OfDayType).ToList();
+            var MissingEmploy = nextshifts.Where(p => p.Name == null).ToList();
+
+            foreach (var shift in MissingEmploy)
+            {
+                for (i = 0; FSrespo.DayOfWeek(i) != shift.Day; i++) ;
+                y = shift.Morning == true ? "M" : shift.Afternoon == true ? "A" : "N";
+
+                foreach (var Eshift in FSrespo.AvailableEmployees(i, y))
+                {
+                    EmpList.Add(Eshift);
+                    DayList.Add(shift.Day);
+                    ShiftList.Add(y == "M" ? "Morning" : y == "A" ? "Afternoon" : "Night");
+                }
+            }
+
+            ViewBag.EmpL = EmpList;
+            ViewBag.DayL = DayList;
+            ViewBag.ShiftL = ShiftList;
+
             return View(nextshifts);
         }
 
@@ -193,7 +140,7 @@ namespace ShiftManagerProject.Controllers
         }
 
         public ActionResult NewClose()
-        {  
+        {
             HsDelete.PrevWeeksDeletion();
             HsDelete.SpecialFixedFshiftDeletion();
 
@@ -224,17 +171,54 @@ namespace ShiftManagerProject.Controllers
         {
             FSrespo.PrevShiftsRotation();
             HsDelete.PrevWeeksDeletion();
+
+            DateTime nextSunday = DateTime.Now.AddDays(1);
+            while (nextSunday.DayOfWeek != DayOfWeek.Sunday)
+            { nextSunday = nextSunday.AddDays(1); }
+            var NextWeek = Convert.ToDateTime(nextSunday).ToString("dd/MM/yyyy");
+            var shifts = db.PrevWeeks.ToList().OrderByDescending(k => k.ID).Take(28).OrderBy(x => x.OfDayType);
+
+            var smtp = new SmtpClient
+            {
+                Host = "smtp.gmail.com",
+                Port = 587,
+                EnableSsl = true,
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential("xxxx", "xxxx")
+            };
+
+
+            foreach (var employee in db.Employees.ToList())
+            {
+                MailMessage mailMessage = new MailMessage
+                {
+                    From = new MailAddress("nocshiftmaster@gmail.com")
+                };
+                mailMessage.To.Add(new MailAddress(employee.Email));
+                mailMessage.Subject = "Your work schedule has been updated!";
+                string body = "<table>" + "<h3>" + "Your work schedule has been updated for week " + NextWeek + "</h3>";
+                foreach (var shift in shifts.Where(x => x.EmployID == employee.ID).OrderBy(d => d.OfDayType))
+                {
+                    body += "<tr>";
+                    body += "<th>" + shift.Day + " " + "</th>";
+                    body += "<td>" + (shift.Morning == true ? " Morning" : shift.Afternoon == true ? " Afternoon" : " Night") + "</td>";
+                    body += "</tr>";
+                }
+                body += "</table>";
+                mailMessage.Body = body;
+                mailMessage.IsBodyHtml = true;
+                smtp.Send(mailMessage);
+            }
+
             return RedirectToAction("Index");
         }
 
-        public ActionResult DeleteFshifts()
+        public ActionResult Edit(long? id, bool? confirmed)
         {
-            HsDelete.SpecialFixedFshiftDeletion();
-            return RedirectToAction("Fixed");
-        }
+            int x;
+            List<Employees> EmployeeList = new List<Employees>();
 
-        public ActionResult Edit(long? id)
-        {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
@@ -244,7 +228,51 @@ namespace ShiftManagerProject.Controllers
             {
                 return HttpNotFound();
             }
-            finalShift.Employees = db.Employees.ToList();
+
+            if (confirmed == true)
+            {
+                finalShift.Employees = db.Employees.ToList();
+                return View(finalShift);
+            }
+
+            for (x = 0; FSrespo.DayOfWeek(x) != finalShift.Day; x++) ;
+            string y = finalShift.Morning == true ? "M" : finalShift.Afternoon == true ? "A" : "N";
+
+            if (confirmed == false)
+            {
+                foreach (var eight in FSrespo.AvailableEightEightEmployees(x, y, FSrespo.AvailableEmployees(x, y)).ToList())
+                {
+                    foreach (var worker in db.Employees.ToList())
+                    {
+                        if (eight == worker.FirstName)
+                        {
+                            EmployeeList.Add(worker);
+                        }
+                    }
+                }
+
+                finalShift.Employees = EmployeeList.ToList();
+                return View(finalShift);
+            }
+
+            foreach (var avail in FSrespo.AvailableEmployees(x, y))
+            {
+                foreach (var worker in db.Employees.ToList())
+                {
+                    if (avail == worker.FirstName)
+                    {
+                        if (!FSrespo.PreviousShifts(x, y, worker))
+                        {
+                            if (!(FSrespo.FutureShifts(x, y, worker)))
+                            {
+                                EmployeeList.Add(worker);
+                            }
+                        }
+                    }
+                }
+            }
+
+            finalShift.Employees = EmployeeList.ToList();
             return View(finalShift);
         }
 
@@ -257,14 +285,18 @@ namespace ShiftManagerProject.Controllers
                 if (finalShift.Name == worker.FirstName)
                 {
                     finalShift.EmployID = worker.ID;
+                    break;
                 }
             }
+
             if (ModelState.IsValid)
             {
                 db.Entry(finalShift).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
+
+            finalShift.Employees = db.Employees.ToList();
             return View(finalShift);
         }
 

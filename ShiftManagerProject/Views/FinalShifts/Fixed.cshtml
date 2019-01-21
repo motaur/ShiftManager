@@ -16,7 +16,7 @@
         });
     }
 }
-
+<link rel="stylesheet" type="text/css" href="~/Content/FixedFinalShift.css" />
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -50,7 +50,7 @@
                 <div class="checkbox">
                     @Html.EditorFor(model => model.Night)
                     @Html.ValidationMessageFor(model => model.Night, "", new { @class = "text-danger" })
-                </div><br /><br />
+                </div><br />
             </div>
         </div>
 
@@ -63,7 +63,7 @@
     </div>
     <br /><br />
 
-    @Html.ActionLink("Officially Close Week", "NewClose", "FinalShifts", new { @class = "btn btn-primary btn-lg btn-block" })
+    @Html.ActionLink("Officially Close Week", "NewClose", "FinalShifts", new { @class = "btn btn-primary btn-sm btn btn-info", @id = "FixedShifts" })
 }
 
 @section Scripts {

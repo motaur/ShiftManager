@@ -23,7 +23,7 @@ namespace ShiftManagerProject.Controllers
         {
             int rec = 0;
             var count = db.PrevWeeks.ToList();
-            if (count.Count()>=56)
+            if (count.Count()>56)
             {
                 rec++;
                 HsDelete.PrevWeeksDeletion();
@@ -42,7 +42,8 @@ namespace ShiftManagerProject.Controllers
             var context = ((IObjectContextAdapter)db).ObjectContext;
             var refreshableObjects = db.ChangeTracker.Entries().Select(c => c.Entity).ToList();
             context.Refresh(RefreshMode.StoreWins, refreshableObjects);
-            var nextshifts = db.PrevWeeks.Take(28).OrderBy(x => x.OfDayType).ToList();
+
+            var nextshifts = db.PrevWeeks.ToList().Take(28).OrderBy(x => x.OfDayType);
             return View(nextshifts);
         }
 

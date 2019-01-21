@@ -1,0 +1,26 @@
+﻿table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+td, th {
+    padding: 8px;
+}
+
+th {
+    background-color: black;
+    color: hotpink;
+}
+
+    th:first-child, td:first-child {
+        position: sticky;
+        left: 0px;
+    }
+
+td:first-child {
+    background-color: lightpink;
+}
+
+mark {
+    background-color: yellow;
+}

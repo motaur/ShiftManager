@@ -10,10 +10,15 @@
     { nextSunday = nextSunday.AddDays(1); }
     var NextWeek = Convert.ToDateTime(nextSunday).ToString("dd/MM/yyyy");
 }
+<script src="@Url.Content("~/Scripts/jquery.unobtrusive-ajax.js")" type="text/javascript"></script>
+<script src="~/Scripts/jquery-1.7.1.min.js" type="text/javascript"></script>
+<script src="~/Scripts/jquery.unobtrusive-ajax.min.js" type="text/javascript"></script>
+<link rel="stylesheet" type="text/css" href="~/Content/FinalShiftIndex.css" />
+
 <br /><br />
 <h2>Next Week's Shifts - @NextWeek</h2>
 <br /><br />
-@Html.ActionLink("Redo", "DeleteFshifts", "FinalShifts", new { @class = "btn btn-secondary" })
+@Html.ActionLink("Redo", "NewClose", "FinalShifts", new { @class = "btn btn-success", @id = "RedoBTN" })
 <br /><br />
 <div class='table-responsive'>
     <table id="tablePreview" class="table table-hover table-bordered" style="width:100%;text-align:center;">
@@ -162,8 +167,6 @@
         @Html.ActionLink("Submit", "Send", "", new { @class = "btn btn-outline-danger" })
     }
 }
-
-
-
+<br />
 
 

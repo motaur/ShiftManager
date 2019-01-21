@@ -10,6 +10,8 @@
 <br /><br />
 
 <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+<link rel="stylesheet" type="text/css" href="~/Content/ListOfShifts.css" />
+
 <div class="d-flex p-8 bg-secondary text-white">
     <table id="tablePreview" class="table table-hover table-bordered table-responsive" style="text-align: center;">
         @{
@@ -17,7 +19,7 @@
             <tr>
                 @foreach (var item in DayOfWeek)
                 {
-                    <th class="table-active" colspan="3">
+                    <th colspan="3">
                         @Html.DisplayFor(x => item)
                     </th>
                 }
@@ -98,11 +100,22 @@
         @foreach (var item in Model)
         {
             <tr>
-                <td colspan="2">
-                    @Html.ActionLink(item.Name, "Edit", "ShiftPrefs", new { id = item.ID }, new { @title = item.Message }) 
-                </td>
+                @if (item.Message != null)
+                {
+                    <td colspan="2">
+                        <mark>
+                            @Html.ActionLink(item.Name, "Edit", "ShiftPrefs", new { id = item.ID }, new { @title = item.Message })
+                        </mark>
+                    </td>
+                }
+                else
+                {
+                    <td colspan="2">
+                        @Html.ActionLink(item.Name, "Edit", "ShiftPrefs", new { id = item.ID }, new { @title = item.Message })
+                    </td>
+                }
                 <td>
-                    @Html.ActionLink(Convert.ToString(item.NoOfShifts), "Edit", "ShiftPrefs", new { id = item.ID })
+                    @Html.ActionLink(Convert.ToString(item.NoOfShifts), "Edit", "ShiftPrefs", new { id = item.ID }, null)
                 </td>
                 <td>
                     @if (item.Morning1 == true)
@@ -235,6 +248,7 @@
 
     </table>
 </div>
+
 @{
     if (@ViewBag.closed != 0)
     {
