@@ -1,15 +1,13 @@
-﻿#RedoBTN {
-    position: absolute;
-    right: 412px;
-    top: 275px;
-}
-
-table {
+﻿table {
     width: 100%;
     text-align: center;
 }
 
-.headertbl {
+.tblheader {
     background-color: mediumpurple;
     color: white;
+}
+
+.tblcontext {
+    font-weight: 600;
 }

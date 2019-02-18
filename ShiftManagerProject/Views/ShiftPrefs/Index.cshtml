@@ -3,11 +3,6 @@
 @{
     ViewBag.Title = "Your Preferences";
     Layout = "~/Views/Shared/_Layout.cshtml";
-}
-<br />
-<h2>Your Preferences</h2>
-<br />
-@{
     List<string> DayOfWeek = new List<string>(new string[] { "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" });
     List<string> Shifts = new List<string>(new string[] { "M", "A", "N" });
     int i = 1;
@@ -21,15 +16,21 @@
     }
     var sh = Model.ToList();
 }
+<link rel="stylesheet" type="text/css" href="~/Content/ShiftPrefIndex.css" />
+<br />
+<h2>Your Preferences</h2>
+<br />
+@*<p>
+        @Html.ActionLink("Delete & Create New", "Delete", new { Id = ID })
+</p>*@
 
 <p>
-    @Html.ActionLink("Delete & Create New", "Delete", new { Id = ID })
+    @Html.ActionLink("Edit", "Edit", new { Id = ID }, new { @class = "btn btn-success" })
 </p>
-
 <br />
 <div class='table-responsive'>
-    <table id="tablePreview" class="table table-hover table-bordered" style="width:100%">
-        <tr class="table-active">
+    <table id="tablePreview" class="table table-hover table-bordered">
+        <tr class="table-active tblheader">
             <th>
             </th>
 
@@ -48,7 +49,7 @@
         @foreach (var items in Model.Take(1))
         {
             <tr>
-                <td class="table-info">
+                <td class="table-info tblcontext">
                     @Html.DisplayNameFor(model => model.Morning1)
                 </td>
                 @foreach (var shift in sh)
@@ -66,7 +67,7 @@
                                     if (val)
                                     {
                                         <td>
-                                            @Html.ActionLink(name, "Edit", new { id = ID }, new { @class = "table-info" })
+                                            @Html.ActionLink(" ", "Edit", new { id = ID }, new { @class = "fas fa-check" })
                                         </td>
                                     }
                                     else
@@ -89,7 +90,7 @@
             i = 1;
             flag++;
             <tr>
-                <td class="table-info">
+                <td class="table-info tblcontext">
                     @Html.DisplayNameFor(model => model.Afternoon1)
                 </td>
                 @foreach (var shift in sh)
@@ -107,7 +108,7 @@
                                     if (val)
                                     {
                                         <td>
-                                            @Html.ActionLink(name, "Edit", new { id = ID }, new { @class = "table-info" })
+                                            @Html.ActionLink(" ", "Edit", new { id = ID }, new { @class = "fas fa-check" })
                                         </td>
                                     }
                                     else
@@ -128,7 +129,7 @@
             i = 1;
             flag++;
             <tr>
-                <td class="table-info">
+                <td class="table-info tblcontext">
                     @Html.DisplayNameFor(model => model.Night1)
                 </td>
                 @foreach (var shift in sh)
@@ -146,7 +147,7 @@
                                     if (val)
                                     {
                                         <td>
-                                            @Html.ActionLink(name, "Edit", new { id = ID }, new { @class = "table-info" })
+                                            @Html.ActionLink(" ", "Edit", new { id = ID }, new { @class = "fas fa-check" })
                                         </td>
                                     }
                                     else
@@ -164,4 +165,4 @@
 
     </table>
 </div>
-
+<br /><br />

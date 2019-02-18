@@ -45,13 +45,12 @@ namespace ShiftManagerProject.Controllers
 
         public ActionResult Create(long? id)
         {
-            if(id==null)
+            if (id == null)
             {
                 return RedirectToAction("Index", "Home");
             }
 
-            ShiftPref shiftPref = db.ShiftPref.Find(id);
-            if (shiftPref == null)
+            if (!(db.ShiftPref.Any(x => x.EmployID == id)))
             {
                 return View();
             }

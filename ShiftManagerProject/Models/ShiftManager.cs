@@ -200,7 +200,10 @@ namespace ShiftManagerProject.Models
 
         public int OfDayType { get; set; }
 
+        [DisplayFormat(ApplyFormatInEditMode = true, DataFormatString = "{0:dd/MM/yyyy}")]
         [Required]
         public DateTime Dates { get; set; }
+
+        public IEnumerable<Employees> Employees { get; set; }
     }
 }

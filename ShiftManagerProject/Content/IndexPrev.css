@@ -1,0 +1,18 @@
+﻿#position {
+    position: absolute;
+    right: 400px;
+    top: 230px;
+}
+
+h2{
+    text-align:center;
+}
+
+.tblheader {
+    background-color: mediumpurple;
+    color: white;
+}
+
+table {
+    text-align: center;
+}

@@ -271,6 +271,10 @@
     <Compile Include="Migrations\201901201234036_datetimecolumn.Designer.cs">
       <DependentUpon>201901201234036_datetimecolumn.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201902181042029_fixchanges.cs" />
+    <Compile Include="Migrations\201902181042029_fixchanges.Designer.cs">
+      <DependentUpon>201902181042029_fixchanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\ShiftManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -280,9 +284,15 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\EditFinalShift.css" />
+    <Content Include="Content\EmployeeIndex.css" />
     <Content Include="Content\FinalShiftIndex.css" />
     <Content Include="Content\FixedFinalShift.css" />
     <Content Include="Content\HomePage.css" />
+    <Content Include="Content\EmployViewSchedules.css" />
+    <Content Include="Content\ShiftPrefIndex.css" />
+    <Content Include="Content\IndexPrev.css" />
+    <Content Include="Content\IndexPrevPrint.css" />
+    <Content Include="Content\LayoutPage.css" />
     <Content Include="Content\ListOfShifts.css" />
     <Content Include="favicon.ico" />
     <Content Include="Global.asax" />
@@ -294,6 +304,7 @@
     <Content Include="Content\bootstrap.css.map" />
     <None Include="Properties\PublishProfiles\CustomProfile.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <Content Include="Content\Images\Gshift.png" />
     <Content Include="Scripts\bootstrap.bundle.js" />
     <Content Include="Scripts\bootstrap.bundle.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -457,6 +468,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201901201234036_datetimecolumn.resx">
       <DependentUpon>201901201234036_datetimecolumn.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201902181042029_fixchanges.resx">
+      <DependentUpon>201902181042029_fixchanges.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

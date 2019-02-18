@@ -15,7 +15,7 @@ namespace ShiftManagerProject.Controllers
         public void PrevWeeksDeletion()
         {
             var count = db.PrevWeeks.ToList();
-            if (count.Count() > 56)
+            if (count.Count() > 476)
             {
                 foreach (var shift in db.PrevWeeks.Take(28))
                 {

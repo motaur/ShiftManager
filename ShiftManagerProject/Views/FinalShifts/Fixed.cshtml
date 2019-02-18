@@ -27,12 +27,12 @@
         <div class="col">
             @Html.DisplayNameFor(model => model.Day)
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.Day, new SelectList(DayOfWeek.ToList()), "-- Select Day --", htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.DropDownListFor(model => model.Day, new SelectList(DayOfWeek.ToList()), "-- Select Day --", htmlAttributes: new { @class = "control-label col-md-2 dropdownboxes" })
                 @Html.ValidationMessageFor(model => model.Day, "", new { @class = "text-danger" })
             </div><br />
             @Html.DisplayNameFor(model => model.Employees)
             <div class="col-md-10">
-                @Html.DropDownListFor(model => model.Name, Employees, "-- Select Employee --", htmlAttributes: new { @class = "control-label col-md-2" })
+                @Html.DropDownListFor(model => model.Name, Employees, "Select Employee", htmlAttributes: new { @class = "control-label col-md-2 dropdownboxes" })
                 @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
             </div><br /><br />
             <div class="col-md-10">
@@ -64,6 +64,7 @@
     <br /><br />
 
     @Html.ActionLink("Officially Close Week", "NewClose", "FinalShifts", new { @class = "btn btn-primary btn-sm btn btn-info", @id = "FixedShifts" })
+    <br />
 }
 
 @section Scripts {

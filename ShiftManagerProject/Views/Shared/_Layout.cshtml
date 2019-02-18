@@ -6,6 +6,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="~/Content/LayoutPage.css" />
     <title>@ViewBag.Title - NOC Shift Manager</title>
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
@@ -14,85 +15,79 @@
 <body>
     <div class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container">
-            <div class="navbar-brand">
+            <div class="navbar-brand" style="width:120px;">
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarColor03" aria-controls="navbarColor03" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
-                @Html.ActionLink("NOC Shift Manager", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.ActionLink("NOC Shift Manager", "Index", "Home", new { area = "" }, new { @class = "navbar-brand logo" })
             </div>
             <div class="collapse navbar-collapse" id="navbarColor03">
                 <ul class="navbar-nav mr-auto">
-                    @*<li class="nav-item">@Html.ActionLink("Home", "Index", "Home")</li>*@
+                    @if (System.Web.HttpContext.Current.Session["admin"] != null)
+                    {
+                        if ((bool)System.Web.HttpContext.Current.Session["admin"] == true)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:black;display:inline;">Admin</a>
+                                <div class="dropdown-menu" x-placement="bottom-start" style="position:absolute; will-change: transform;">
+                                    @Html.ActionLink("Shift-Preferences", "ListOfShifts", "FinalShifts", null, new { @class = "dropdown-item" })
+                                    <div class="dropdown-divider"></div>
+                                    @Html.ActionLink("Fixed-Shifts", "Fixed", "FinalShifts", null, new { @class = "dropdown-item" })
+                                    <div class="dropdown-divider"></div>
+                                    @Html.ActionLink("Employees", "Index", "Employees", null, new { @class = "dropdown-item" })
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink("Your Preferences", "Index", "ShiftPrefs")
+                            </li>
+                        }
+                    }
+
+                    @if (System.Web.HttpContext.Current.Session["admin"] != null)
+                    {
+                        if ((bool)System.Web.HttpContext.Current.Session["admin"] == true)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" style="color:black;display:inline;">Previous Shifts</a>
+                                <div class="dropdown-menu" x-placement="bottom-start" style="position:absolute; will-change: transform;">
+                                    @Html.ActionLink("Shift History", "Index", "PrevWeeks", null, new { @class = "dropdown-item" })
+                                    <div class="dropdown-divider"></div>
+                                    @Html.ActionLink("This Week's Schedule", "LastWeek", "PrevWeeks", null, new { @class = "dropdown-item" })
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                @Html.ActionLink("This Week's Schedule", "LastWeek", "PrevWeeks")
+                            </li>
+                        }
+                    }
 
                     <li class="nav-item">
                         @if (System.Web.HttpContext.Current.Session["admin"] != null)
                         {
                             if ((bool)System.Web.HttpContext.Current.Session["admin"] == true)
                             {
-                                @Html.ActionLink("Admin-List", "ListOfShifts", "FinalShifts")
+                                @Html.ActionLink("Next Week's Schedule", "Index", "FinalShifts")
                             }
                             else
                             {
-                                @Html.ActionLink("Your Preferences", "Index", "ShiftPrefs")
-                            }
-                        }
-                    </li>
-                    <li class="nav-item">
-                        @if (System.Web.HttpContext.Current.Session["admin"] != null)
-                        {
-                            if ((bool)System.Web.HttpContext.Current.Session["admin"] == true)
-                            {
-                                @Html.ActionLink("EShifts", "Index", "FinalShifts")
-                            }
-                            else
-                            {
-                                @Html.ActionLink("This Week", "LastWeek", "PrevWeeks")
-                            }
-                        }
-                    </li>
-                    <li class="nav-item">
-                        @if (System.Web.HttpContext.Current.Session["admin"] != null)
-                        {
-                            if ((bool)System.Web.HttpContext.Current.Session["admin"] == true)
-                            {
-                                @Html.ActionLink("Previous Shifts", "Index", "PrevWeeks")
-                            }
-                            else
-                            {
-                                @Html.ActionLink("Next Week", "FShiftsForEmployees", "FinalShifts")
-                            }
-                        }
-                    </li>
-                    <li class="nav-item">
-                        @if (System.Web.HttpContext.Current.Session["admin"] != null)
-                        {
-                            if ((bool)System.Web.HttpContext.Current.Session["admin"] == true)
-                            {
-                                @Html.ActionLink("Fixed", "Fixed", "FinalShifts")
-                            }
-                        }
-                    </li>
-                    <li class="nav-item">
-                        @if (System.Web.HttpContext.Current.Session["admin"] != null)
-                        {
-                            if ((bool)System.Web.HttpContext.Current.Session["admin"] == true)
-                            {
-                                @Html.ActionLink("Employees", "Index", "Employees")
+                                @Html.ActionLink("Next Week's Schedule", "FShiftsForEmployees", "FinalShifts")
                             }
                         }
                     </li>
                 </ul>
 
                 <ul style="width:auto; align-content:stretch;" class="nav navbar-nav navbar-right mr-auto">
-                    <li class="nav-item">
+                    <li class="nav-item" style="font-family: 'Kalam', cursive;color:mediumpurple;">
                         @if (System.Web.HttpContext.Current.Session["UserSess"] != null)
                         {
                             <strong>Howdy @Html.Encode(Session["UserSess"]) !</strong>
                         }
-                        @*else
-                        {
-                            @Html.ActionLink("Employees", "Index", "Employees")
-                        }*@
                     </li>
                     <li class="nav-item">
                         @if (System.Web.HttpContext.Current.Session["UserSess"] != null)
@@ -111,8 +106,8 @@
     <br /><br />
     <div class="container body-content">
         @RenderBody()
-        <hr />
-        <footer>
+        <hr style="width:100%;" />
+        <footer style="bottom:0;">
             <p>&copy; @DateTime.Now.Year - Gabriella <i class="fab fa-studiovinari"></i> </p>
         </footer>
     </div>
@@ -120,5 +115,20 @@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
+
+    <script>
+        $(document).ready(function () {
+            $(".dropdown").hover(
+                function () {
+                    $('.dropdown-menu', this).not('.in .dropdown-menu').stop(true, true).slideDown("fast");
+                    $(this).toggleClass('open');
+                },
+                function () {
+                    $('.dropdown-menu', this).not('.in .dropdown-menu').stop(true, true).slideUp("slow");
+                    $(this).toggleClass('open');
+                }
+            );
+        });
+    </script>
 </body>
 </html>

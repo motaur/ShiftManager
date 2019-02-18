@@ -1,15 +1,18 @@
-﻿#RedoBTN {
+﻿#rightpos {
     position: absolute;
-    right: 412px;
-    top: 275px;
+    right: 400px;
+    top: 230px;
 }
 
-table {
-    width: 100%;
+h2 {
     text-align: center;
 }
 
-.headertbl {
+table {
+    text-align: center;
+}
+
+.tablehead {
     background-color: mediumpurple;
     color: white;
 }

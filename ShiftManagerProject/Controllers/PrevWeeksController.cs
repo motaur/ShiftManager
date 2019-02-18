@@ -21,20 +21,64 @@ namespace ShiftManagerProject.Controllers
 
         public ActionResult Index()
         {
-            int rec = 0;
-            var count = db.PrevWeeks.ToList();
-            if (count.Count()>56)
+            var Pcount = db.PrevWeeks.ToList();
+            if (Pcount.Count()> 476)
             {
-                rec++;
                 HsDelete.PrevWeeksDeletion();
             }
-            ViewBag.records = rec;
 
-            var nextshifts = db.PrevWeeks.OrderByDescending(x => x.OfDayType).OrderBy(x => x.OfDayType).ToList();
+            var nextshifts = db.PrevWeeks.OrderBy(r => DbFunctions.TruncateTime(r.Dates)).ThenBy(c => c.OfDayType).ToList();
+            ViewBag.Employees = db.Employees.ToList();
             return View(nextshifts);
         }
 
-        public ActionResult LastWeek()
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Index(FormCollection form)
+        {
+            string Ename = form["Employees"].ToString();
+            string Date = form["inputState"].ToString();
+            var ReportShifts = db.PrevWeeks.ToList();
+
+            if (Date != "Dates")
+            {
+                var today = DateTime.Today.AddDays(1).Date;
+                var month = DateTime.Today;
+
+                switch (Date)
+                {
+                    case "Month":
+                        month = today.AddMonths(-1);
+                        ReportShifts = ReportShifts.Where(y => y.Dates <= today && y.Dates >= month).OrderBy(r => r.Dates.Date).ThenBy(c => c.OfDayType).ToList();
+                        break;
+                    case "3 Months":
+                        month = today.AddMonths(-3);
+                        ReportShifts = ReportShifts.Where(y => y.Dates <= today && y.Dates >= month).OrderBy(r => r.Dates.Date).ThenBy(c => c.OfDayType).ToList();
+                        break;
+                    case "6 Months":
+                        month = today.AddMonths(-6);
+                        ReportShifts = ReportShifts.Where(y => y.Dates <= today && y.Dates >= month).OrderBy(r => r.Dates.Date).ThenBy(c => c.OfDayType).ToList();
+                        break;
+                    case "Year":
+                        month = today.AddYears(-1);
+                        ReportShifts = ReportShifts.Where(y => y.Dates <= today && y.Dates >= month).OrderBy(r => r.Dates.Date).ThenBy(c => c.OfDayType).ToList();
+                        break;
+                    case "All":
+                        ReportShifts = ReportShifts.OrderBy(r => r.Dates.Date).ThenBy(c => c.OfDayType).ToList();
+                        break;
+                }
+            }
+
+            if(Ename != "")
+            {
+                ReportShifts = ReportShifts.Where(x => x.Name == Ename).OrderBy(r => r.Dates.Date).ThenBy(c => c.OfDayType).ToList();
+            }
+
+            ViewBag.Employees = db.Employees.ToList();
+            return View(ReportShifts);
+        }
+
+            public ActionResult LastWeek()
         {
             HsDelete.PrevWeeksDeletion();
             HsDelete.FshiftDeletion();

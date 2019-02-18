@@ -96,11 +96,7 @@ namespace ShiftManagerProject.Controllers
 
         public ActionResult Index()
         {
-            int ad = 0, i = 0;
-            string y;
-            List<string> EmpList = new List<string>();
-            List<string> DayList = new List<string>();
-            List<string> ShiftList = new List<string>();
+            int ad = 0;
 
             var pweeks = db.PrevWeeks.OrderByDescending(x => x.ID).Take(28).OrderBy(w => w.OfDayType).Select(k => k.EmployID).ToList();
             var fweeks = db.FinalShift.OrderBy(q => q.OfDayType).Select(k => k.EmployID).ToList();
@@ -111,24 +107,6 @@ namespace ShiftManagerProject.Controllers
 
             ViewBag.admin = ad;
             var nextshifts = db.FinalShift.OrderByDescending(x => x.OfDayType).OrderBy(x => x.OfDayType).ToList();
-            var MissingEmploy = nextshifts.Where(p => p.Name == null).ToList();
-
-            foreach (var shift in MissingEmploy)
-            {
-                for (i = 0; FSrespo.DayOfWeek(i) != shift.Day; i++) ;
-                y = shift.Morning == true ? "M" : shift.Afternoon == true ? "A" : "N";
-
-                foreach (var Eshift in FSrespo.AvailableEmployees(i, y))
-                {
-                    EmpList.Add(Eshift);
-                    DayList.Add(shift.Day);
-                    ShiftList.Add(y == "M" ? "Morning" : y == "A" ? "Afternoon" : "Night");
-                }
-            }
-
-            ViewBag.EmpL = EmpList;
-            ViewBag.DayL = DayList;
-            ViewBag.ShiftL = ShiftList;
 
             return View(nextshifts);
         }
@@ -172,44 +150,43 @@ namespace ShiftManagerProject.Controllers
             FSrespo.PrevShiftsRotation();
             HsDelete.PrevWeeksDeletion();
 
-            DateTime nextSunday = DateTime.Now.AddDays(1);
-            while (nextSunday.DayOfWeek != DayOfWeek.Sunday)
-            { nextSunday = nextSunday.AddDays(1); }
-            var NextWeek = Convert.ToDateTime(nextSunday).ToString("dd/MM/yyyy");
-            var shifts = db.PrevWeeks.ToList().OrderByDescending(k => k.ID).Take(28).OrderBy(x => x.OfDayType);
+            //DateTime nextSunday = DateTime.Now.AddDays(1);
+            //while (nextSunday.DayOfWeek != DayOfWeek.Sunday)
+            //{ nextSunday = nextSunday.AddDays(1); }
+            //var NextWeek = Convert.ToDateTime(nextSunday).ToString("dd/MM/yyyy");
+            //var shifts = db.PrevWeeks.ToList().OrderByDescending(k => k.ID).Take(28).OrderBy(x => x.OfDayType);
 
-            var smtp = new SmtpClient
-            {
-                Host = "smtp.gmail.com",
-                Port = 587,
-                EnableSsl = true,
-                DeliveryMethod = SmtpDeliveryMethod.Network,
-                UseDefaultCredentials = false,
-                Credentials = new NetworkCredential("xxxx", "xxxx")
-            };
+            //var smtp = new SmtpClient
+            //{
+            //    Host = "smtp.gmail.com",
+            //    Port = 587,
+            //    EnableSsl = true,
+            //    DeliveryMethod = SmtpDeliveryMethod.Network,
+            //    UseDefaultCredentials = false,
+            //    Credentials = new NetworkCredential()
+            //};
 
-
-            foreach (var employee in db.Employees.ToList())
-            {
-                MailMessage mailMessage = new MailMessage
-                {
-                    From = new MailAddress("nocshiftmaster@gmail.com")
-                };
-                mailMessage.To.Add(new MailAddress(employee.Email));
-                mailMessage.Subject = "Your work schedule has been updated!";
-                string body = "<table>" + "<h3>" + "Your work schedule has been updated for week " + NextWeek + "</h3>";
-                foreach (var shift in shifts.Where(x => x.EmployID == employee.ID).OrderBy(d => d.OfDayType))
-                {
-                    body += "<tr>";
-                    body += "<th>" + shift.Day + " " + "</th>";
-                    body += "<td>" + (shift.Morning == true ? " Morning" : shift.Afternoon == true ? " Afternoon" : " Night") + "</td>";
-                    body += "</tr>";
-                }
-                body += "</table>";
-                mailMessage.Body = body;
-                mailMessage.IsBodyHtml = true;
-                smtp.Send(mailMessage);
-            }
+            //foreach (var employee in db.Employees.ToList())
+            //{
+            //    MailMessage mailMessage = new MailMessage
+            //    {
+            //        From = new MailAddress("nocshiftmaster@gmail.com")
+            //    };
+            //    mailMessage.To.Add(new MailAddress(employee.Email));
+            //    mailMessage.Subject = "Your work schedule has been updated!";
+            //    string body = "<table>" + "<h3>" + "Your work schedule has been updated for week " + NextWeek + "</h3>";
+            //    foreach (var shift in shifts.Where(x => x.EmployID == employee.ID).OrderBy(d => d.OfDayType))
+            //    {
+            //        body += "<tr>";
+            //        body += "<th>" + shift.Day + " " + "</th>";
+            //        body += "<td>" + (shift.Morning == true ? " Morning" : shift.Afternoon == true ? " Afternoon" : " Night") + "</td>";
+            //        body += "</tr>";
+            //    }
+            //    body += "</table>";
+            //    mailMessage.Body = body;
+            //    mailMessage.IsBodyHtml = true;
+            //    smtp.Send(mailMessage);
+            //}
 
             return RedirectToAction("Index");
         }

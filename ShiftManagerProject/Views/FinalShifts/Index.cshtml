@@ -21,8 +21,8 @@
 @Html.ActionLink("Redo", "NewClose", "FinalShifts", new { @class = "btn btn-success", @id = "RedoBTN" })
 <br /><br />
 <div class='table-responsive'>
-    <table id="tablePreview" class="table table-hover table-bordered" style="width:100%;text-align:center;">
-        <tr class="table-active">
+    <table id="tablePreview" class="table table-hover table-bordered">
+        <tr class="table-active headertbl">
             <th>
             </th>
             @foreach (var item in Model.Select(x => x.Day).Distinct())
@@ -167,6 +167,6 @@
         @Html.ActionLink("Submit", "Send", "", new { @class = "btn btn-outline-danger" })
     }
 }
-<br />
+<br /><br />
 
 

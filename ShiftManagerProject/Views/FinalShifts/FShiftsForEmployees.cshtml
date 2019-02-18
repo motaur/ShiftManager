@@ -8,17 +8,15 @@
     while (nextSunday.DayOfWeek != DayOfWeek.Sunday)
     { nextSunday = nextSunday.AddDays(1); }
     var NextWeek = Convert.ToDateTime(nextSunday).ToString("dd/MM/yyyy");
+    int j = 0;
 }
+<link rel="stylesheet" type="text/css" href="~/Content/EmployViewSchedules.css" />
 <br /><br />
 <h2>Next Week's Shifts - @NextWeek</h2>
 <br /><br />
 <div class='table-responsive'>
-    @{
-        int j = 0;
-    }
-
-    <table id="tablePreview" class="table table-hover table-bordered" style="width:100%;text-align:center;">
-        <tr class="table-active">
+    <table id="tablePreview" class="table table-hover table-bordered">
+        <tr class="table-active tblheader">
             <th>
             </th>
             @foreach (var item in Model.Select(x => x.Day).Distinct())
@@ -32,7 +30,7 @@
         @foreach (var items in Model.Take(1))
         {
         <tr>
-            <td class="table-info">
+            <td class="table-info tblcontext">
                 @Html.DisplayNameFor(model => model.Morning)
             </td>
             @foreach (var Mshift in Model.Where(x => x.Morning == true).OrderBy(m => m.OfDayType))
@@ -91,7 +89,7 @@
         @foreach (var items in Model.Take(1))
         {
         <tr>
-            <td class="table-success">
+            <td class="table-success tblcontext">
                 @Html.DisplayNameFor(model => model.Afternoon)
             </td>
 
@@ -123,7 +121,7 @@
         @foreach (var items in Model.Take(1))
         {
         <tr>
-            <td class="table-warning">
+            <td class="table-warning tblcontext">
                 @Html.DisplayNameFor(model => model.Night)
             </td>
             @foreach (var Nshift in Model.Where(x => x.Night == true).OrderBy(m => m.OfDayType))
@@ -151,7 +149,7 @@
 
     </table>
 </div>
-
+<br /><br />
 
 
 
