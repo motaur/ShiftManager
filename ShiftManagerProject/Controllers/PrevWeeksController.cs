@@ -79,7 +79,7 @@ namespace ShiftManagerProject.Controllers
         }
 
             public ActionResult LastWeek()
-        {
+        {          
             HsDelete.PrevWeeksDeletion();
             HsDelete.FshiftDeletion();
 
@@ -87,7 +87,25 @@ namespace ShiftManagerProject.Controllers
             var refreshableObjects = db.ChangeTracker.Entries().Select(c => c.Entity).ToList();
             context.Refresh(RefreshMode.StoreWins, refreshableObjects);
 
-            var nextshifts = db.PrevWeeks.ToList().Take(28).OrderBy(x => x.OfDayType);
+            int i = 0;
+            var totalshifts = db.ShiftsPerWeek.Select(o => o.NumOfShifts).FirstOrDefault();
+            var nextshifts = db.PrevWeeks.ToList();
+
+            if (!(nextshifts.OrderBy(y=>y.Dates).Take(totalshifts).Where(y=>y.Dates.Date == DateTime.Now.Date).Any()))
+            {
+                ViewBag.ShiftUpdate = ++i;
+            }
+            else
+            {
+                nextshifts = nextshifts.Take(totalshifts).OrderBy(x => x.OfDayType).ToList();
+            }
+            ViewBag.ShiftUpdate = i;
+
+            ViewBag.shifts = db.ScheduleParameters.Select(x => x.Morning + x.Afternoon + x.Night).FirstOrDefault();
+            ViewBag.morning = db.ScheduleParameters.Select(x => x.Morning).FirstOrDefault();
+            ViewBag.afternoon = db.ScheduleParameters.Select(x => x.Afternoon).FirstOrDefault();
+            ViewBag.night = db.ScheduleParameters.Select(x => x.Night).FirstOrDefault();
+
             return View(nextshifts);
         }
 

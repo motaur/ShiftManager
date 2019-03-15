@@ -9,146 +9,135 @@
     { nextSunday = nextSunday.AddDays(1); }
     var NextWeek = Convert.ToDateTime(nextSunday).ToString("dd/MM/yyyy");
     int j = 0;
+    int i = 0;
+    int shiftopt = ViewBag.shifts;
+    int mo = ViewBag.morning;
+    int a = ViewBag.afternoon;
+    int n = ViewBag.night;
 }
 <link rel="stylesheet" type="text/css" href="~/Content/EmployViewSchedules.css" />
-<br /><br />
-<h2>Next Week's Shifts - @NextWeek</h2>
-<br /><br />
-<div class='table-responsive'>
-    <table id="tablePreview" class="table table-hover table-bordered">
-        <tr class="table-active tblheader">
-            <th>
-            </th>
-            @foreach (var item in Model.Select(x => x.Day).Distinct())
-            {
+@if (ViewBag.ShiftUpdate != 0)
+{
+    <h3 class="msg">Shifts haven't been updated yet</h3>
+}
+else
+{
+    <br /><br />
+    <h2>Next Week's Shifts - @NextWeek</h2>
+    <br /><br />
+    <div class='table-responsive'>
+        <table id="tablePreview" class="table table-hover table-bordered">
+            <tr class="table-active tblheader">
                 <th>
-                    @Html.DisplayFor(x => item)
                 </th>
-            }
-        </tr>
-
-        @foreach (var items in Model.Take(1))
-        {
-        <tr>
-            <td class="table-info tblcontext">
-                @Html.DisplayNameFor(model => model.Morning)
-            </td>
-            @foreach (var Mshift in Model.Where(x => x.Morning == true).OrderBy(m => m.OfDayType))
-            {
-
-                if (Mshift.OfDayType == j)
+                @foreach (var item in Model.Select(x => x.Day).Distinct())
                 {
-
-                    j += 4;
-                    if (@Html.Encode(Session["UserSess"]) == Mshift.Name)
-                    {
-                        <td class="table-info">
-                            @Html.DisplayFor(model => Mshift.Name)
-                        </td>
-                    }
-                    else
-                    {
-                        <td>
-                            @Html.DisplayFor(model => Mshift.Name)
-                        </td>
-                    }
+                    <th>
+                        @Html.DisplayFor(x => item)
+                    </th>
 
                 }
-            }
-        </tr>
+            </tr>
 
-            j = 1;
-        <tr>
-            <td></td>
-            @foreach (var Mshift in Model.Where(x => x.Morning == true).OrderBy(m => m.OfDayType))
+            @foreach (var items in Model.Take(mo))
             {
-
-                if (Mshift.OfDayType == j)
-                {
-
-                    j += 4;
-                    if (@Html.Encode(Session["UserSess"]) == Mshift.Name)
+                <tr>
+                    <td class="table-info tblcontext">
+                        @Html.DisplayNameFor(model => model.Morning)
+                    </td>
+                    @foreach (var Mshift in Model.Where(x => x.Morning == true).OrderBy(m => m.OfDayType))
                     {
-                        <td class="table-info">
-                            @Html.DisplayFor(model => Mshift.Name)
-                        </td>
-                    }
-                    else
-                    {
-                        <td>
-                            @Html.DisplayFor(model => Mshift.Name)
-                        </td>
-                    }
 
+                        if (Mshift.OfDayType == j)
+                        {
 
-                }
+                            j += shiftopt;
+                            if (@Html.Encode(Session["UserSess"]) == Mshift.Name)
+                            {
+                                <td class="table-info">
+                                    @Html.DisplayFor(model => Mshift.Name)
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @Html.DisplayFor(model => Mshift.Name)
+                                </td>
+                            }
+
+                        }
+                    }
+                </tr>
+                j = ++i;
             }
-        </tr>
-        }
-        @{ j = 2;}
-        @foreach (var items in Model.Take(1))
-        {
-        <tr>
-            <td class="table-success tblcontext">
-                @Html.DisplayNameFor(model => model.Afternoon)
-            </td>
 
-            @foreach (var Ashift in Model.Where(x => x.Afternoon == true).OrderBy(m => m.OfDayType))
+            @{j = i;}
+            @foreach (var items in Model.Take(a))
             {
+                <tr>
+                    <td class="table-success tblcontext">
+                        @Html.DisplayNameFor(model => model.Afternoon)
+                    </td>
 
-                if (Ashift.OfDayType == j)
-                {
-                    j += 4;
-                    if (@Html.Encode(Session["UserSess"]) == Ashift.Name)
+                    @foreach (var Ashift in Model.Where(x => x.Afternoon == true).OrderBy(m => m.OfDayType))
                     {
-                        <td class="table-info">
-                            @Html.DisplayFor(model => Ashift.Name)
-                        </td>
-                    }
-                    else
-                    {
-                        <td>
-                            @Html.DisplayFor(model => Ashift.Name)
-                        </td>
-                    }
-                }
 
+                        if (Ashift.OfDayType == j)
+                        {
+                            j += shiftopt;
+                            if (@Html.Encode(Session["UserSess"]) == Ashift.Name)
+                            {
+                                <td class="table-info">
+                                    @Html.DisplayFor(model => Ashift.Name)
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @Html.DisplayFor(model => Ashift.Name)
+                                </td>
+                            }
+                        }
+
+                    }
+                </tr>
+                j = ++i;
             }
-        </tr>
-        }
-        @{ j = 3;}
+            @{ j = i;}
 
-        @foreach (var items in Model.Take(1))
-        {
-        <tr>
-            <td class="table-warning tblcontext">
-                @Html.DisplayNameFor(model => model.Night)
-            </td>
-            @foreach (var Nshift in Model.Where(x => x.Night == true).OrderBy(m => m.OfDayType))
+            @foreach (var items in Model.Take(n))
             {
+                <tr>
+                    <td class="table-warning tblcontext">
+                        @Html.DisplayNameFor(model => model.Night)
+                    </td>
+                    @foreach (var Nshift in Model.Where(x => x.Night == true).OrderBy(m => m.OfDayType))
+                    {
 
-                if (Nshift.OfDayType == j)
-                {
-                    j += 4;
-                    if (@Html.Encode(Session["UserSess"]) == Nshift.Name)
-                    {
-                        <td class="table-info">
-                            @Html.DisplayFor(model => Nshift.Name)
-                        </td>
+                        if (Nshift.OfDayType == j)
+                        {
+                            j += shiftopt;
+                            if (@Html.Encode(Session["UserSess"]) == Nshift.Name)
+                            {
+                                <td class="table-info">
+                                    @Html.DisplayFor(model => Nshift.Name)
+                                </td>
+                            }
+                            else
+                            {
+                                <td>
+                                    @Html.DisplayFor(model => Nshift.Name)
+                                </td>
+                            }
+                        }
                     }
-                    else
-                    {
-                        <td>
-                            @Html.DisplayFor(model => Nshift.Name)
-                        </td>
-                    }
-                }
+                </tr>
+                j = ++i;
             }
-        </tr>
-        }
 
-    </table>
-</div>
+        </table>
+    </div>
+}
 <br /><br />
 
 

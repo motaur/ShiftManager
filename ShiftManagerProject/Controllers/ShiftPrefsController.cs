@@ -98,7 +98,6 @@ namespace ShiftManagerProject.Controllers
             ShiftPref shift = db.ShiftPref.Find(shiftPref.ID);
             shiftPref.EmployID = shift.EmployID;
             shiftPref.Name = shift.Name;
-            //shiftPref.Message = shift.Message;
 
             var result = db.ShiftPref.SingleOrDefault(b => b.ID == shiftPref.ID);
 

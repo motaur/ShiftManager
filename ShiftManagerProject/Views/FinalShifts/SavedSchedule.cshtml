@@ -1,0 +1,145 @@
+﻿@model IEnumerable<ShiftManagerProject.Models.Remake>
+
+
+@{
+    ViewBag.Title = "SavedSchedule";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int j = 0;
+    int i = 0;
+    int shiftopt = ViewBag.shifts;
+    int mo = ViewBag.morning;
+    int a = ViewBag.afternoon;
+    int n = ViewBag.night;
+}
+
+<h2 class="title">Saved Schedule</h2>
+
+<link rel="stylesheet" type="text/css" href="~/Content/FinalShiftIndex.css" />
+<br /><br />
+@if (@ViewBag.admin != 0)
+{
+    <h3 class="SavedSubmitBTN fontheader">Submitted</h3>
+}
+else if (ViewBag.msg != 0)
+{
+    @Html.ActionLink("Submit", "SaveTheSchedule", "FinalShifts", new { id = true }, new { @class = "btn btn-success SavedSubmitBTN" })
+}
+<br /><br />
+@if (@ViewBag.msg == 0)
+{
+<h3 class="fontheader title">Saved schedule doesn't match the settings format</h3>
+}
+else
+{
+<div class='table-responsive'>
+    <table id="tablePreview" class="table table-hover table-bordered">
+        <tr class="table-active">
+            <th>
+            </th>
+            @foreach (var item in Model.Select(x => x.Day).Distinct())
+            {
+                <th>
+                    @Html.DisplayFor(x => item)
+                </th>
+            }
+        </tr>
+
+        @foreach (var items in Model.Take(mo))
+        {
+            <tr>
+                <td class="table-info bold">
+                    @Html.DisplayNameFor(model => model.Morning)
+                </td>
+                @foreach (var Mshift in Model.Where(x => x.Morning == true).OrderBy(m => m.OfDayType))
+                {
+
+                    if (Mshift.OfDayType == j)
+                    {
+
+                        j += shiftopt;
+                        if (Mshift.Name.IsEmpty())
+                        {
+                            <td>
+                                @Html.Label(" ")
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @Html.Label(Mshift.Name)
+                            </td>
+                        }
+                    }
+                }
+            </tr>
+            j = ++i;
+        }
+
+        @{ j = i;}
+        @foreach (var items in Model.Take(a))
+        {
+            <tr>
+                <td class="table-success bold">
+                    @Html.DisplayNameFor(model => model.Afternoon)
+                </td>
+
+                @foreach (var Ashift in Model.Where(x => x.Afternoon == true).OrderBy(m => m.OfDayType))
+                {
+
+                    if (Ashift.OfDayType == j)
+                    {
+                        j += shiftopt;
+                        if (Ashift.Name.IsEmpty())
+                        {
+                            <td>
+                                @Html.Label(" ")
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @Html.Label(Ashift.Name)
+                            </td>
+                        }
+                    }
+                }
+            </tr>
+            j = ++i;
+        }
+        @{ j = i;}
+
+        @foreach (var items in Model.Take(n))
+        {
+            <tr>
+                <td class="table-warning bold">
+                    @Html.DisplayNameFor(model => model.Night)
+                </td>
+                @foreach (var Nshift in Model.Where(x => x.Night == true).OrderBy(m => m.OfDayType))
+                {
+
+                    if (Nshift.OfDayType == j)
+                    {
+                        j += shiftopt;
+                        if (Nshift.Name.IsEmpty())
+                        {
+                            <td>
+                                @Html.Label(" ")
+                            </td>
+                        }
+                        else
+                        {
+                            <td>
+                                @Html.Label(Nshift.Name)
+                            </td>
+                        }
+                    }
+                }
+            </tr>
+            j = ++i;
+        }
+
+    </table>
+    <br />
+</div>
+            }
+<br /><br />

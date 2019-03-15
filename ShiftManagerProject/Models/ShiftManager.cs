@@ -206,4 +206,80 @@ namespace ShiftManagerProject.Models
 
         public IEnumerable<Employees> Employees { get; set; }
     }
+
+    public class ScheduleParameters
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Required]
+        public int ID { get; set; }
+
+        [DisplayName("Morning")]
+        public int Morning { get; set; }
+        
+        [DisplayName("Afternoon")]
+        public int Afternoon { get; set; }
+   
+        [DisplayName("Night")]
+        public int Night { get; set; }
+
+        public string Day { get; set; }
+
+        [DisplayName("Morning")]
+        public int DMorning { get; set; }
+
+        [DisplayName("Afternoon")]
+        public int DAfternoon { get; set; }
+
+        [DisplayName("Night")]
+        public int DNight { get; set; }
+
+        [DisplayName("Max Morning Shifts")]
+        public int MaxMorning { get; set; }
+
+        [DisplayName("Max Afternoon Shifts")]
+        public int MaxAfternoon { get; set; }
+
+        [DisplayName("Max Night Shifts")]
+        public int MaxNight { get; set; }
+    }
+
+    public class ShiftsPerWeek
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Required]
+        public int ID { get; set; }
+
+        [Required]
+        public int NumOfShifts { get; set; }
+    }
+
+    public class Remake
+    {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Required]
+        public long ID { get; set; }
+
+        public long EmployID { get; set; }
+
+        public string Name { get; set; }
+
+        [Required]
+        public string Day { get; set; }
+
+        [DisplayName("Morning")]
+        public Nullable<bool> Morning { get; set; }
+
+        [DisplayName("Afternoon")]
+        public Nullable<bool> Afternoon { get; set; }
+
+        [DisplayName("Night")]
+        public Nullable<bool> Night { get; set; }
+
+        public int OfDayType { get; set; }
+
+        [Required]
+        public DateTime Dates { get; set; }
+
+        public IEnumerable<Employees> Employees { get; set; }
+    }
 }
